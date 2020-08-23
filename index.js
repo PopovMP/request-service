@@ -12,12 +12,21 @@ const logger  = require("@popovmp/micro-logger");
  * @param {number} [code] - status code
  */
 
+
+/**
+ * @typedef {object} RequestOptions
+ *
+ * @property {string} hostname
+ * @property {string} path
+ * @property {OutgoingHttpHeaders} header
+ */
+
 /**
  * Sends a POST request.
  *
  * @param {string} hostname
  * @param {string} path
- * @param {string} data
+ * @param {any} data
  * @param {OutgoingHttpHeaders} headers
  * @param {ResponseCallback} [callback] callback(error, data, responseCode)
  */
@@ -30,7 +39,11 @@ function post(hostname, path, data, headers, callback) {
         method: 'POST',
     };
 
-    sendRequest(options, data, callback);
+    const dataText = typeof data === "string"
+        ? data
+        : JSON.stringify(data);
+
+    sendRequest(options, dataText, callback);
 }
 
 /**
@@ -54,6 +67,13 @@ function get(hostname, path, query, headers, callback) {
     sendRequest(options, "", callback);
 }
 
+/**
+ * Sends a request
+ *
+ * @param {RequestOptions} options
+ * @param {string} data
+ * @param {ResponseCallback} [callback]
+ */
 function sendRequest(options, data, callback) {
     const req = https.request(options, (resp) => {
         const chunks = [];
