@@ -1,14 +1,13 @@
 {
   "name": "@popovmp/request-service",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "A wrapper around `request` with a sane callback.",
   "main": "index.js",
   "author": "Popov MP <info@forexsb.com>",
   "license": "MIT",
   "homepage": "https://github.com/popovmp/request-service",
   "dependencies": {
-    "@popovmp/micro-logger": "^1.2.1",
-    "request": "^2.88.2"
+    "@popovmp/micro-logger": "^1.2.1"
   },
   "devDependencies": {
     "@popovmp/micro-tester": "^1.0.1"

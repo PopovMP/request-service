@@ -1,4 +1,4 @@
-# A wrapper around `request` with a sane callback
+# Sends GET and POST requests with sane callback
 
 **request-service** provides GET and POST request methods, logs errors and calls a callback with Error, Data and StatusCode.  
 
@@ -9,23 +9,35 @@ Homepage: https://github.com/popovmp/request-service
 ```javascript
 const requestService = require("@popovmp/request-service");
 
-const url     = "https://exmaple.com/post";
-const form    = {answer:  42};
-const headers = {Sender: "John"};
+// POST request
 
+const hostname = "httpbin.org";
+const path     = "/post";
+const data     = JSON.stringify( {"foo": "bar"} );
+const headers  = {"Answer": 42};
 
-requestService.post(url, form, headers,
-    requestService_post_callback);
+requestService.post(hostname, path, data, headers,
+    request_ready);
 
-function requestService_post_callback(err, data, status) {
+// GET request
+
+const hostname = "httpbin.org";
+const path     = "/get";
+const query    = {"foo": "bar"};
+const headers  = {"Answer": 42};
+
+requestService.get(hostname, path, query, headers,
+    request_ready);
+
+// Calback
+
+function request_ready(err, data, status) {
     if (err) {
         console.error("Error: " + err);
-    } else {
-        console.log(data);
     }
+    console.log(data);
     console.log("Status: " + status);
 }
-
 ````
 
 ## Installation
@@ -58,24 +70,26 @@ const logger = require("micro-logger").init("./logs/log.txt");
 /**
  * Sends a POST request.
  *
- * @param {string} url
- * @param {Object} form
- * @param {Object} headers
+ * @param {string} hostname
+ * @param {string} path
+ * @param {string} data
+ * @param {OutgoingHttpHeaders} headers
  * @param {ResponseCallback} [callback] callback(error, data, responseCode)
  */
-function post(url, form, headers, callback)
+function post(hostname, path, data, headers, callback)
 ````
 
 ```javascript
 /**
  * Sends a GET request.
  *
- * @param {string} url
+ * @param {string} hostname
+ * @param {string} path
  * @param {Object} query
- * @param {Object} headers
- * @param {ResponseCallback} callback
+ * @param {OutgoingHttpHeaders} headers
+ * @param {ResponseCallback} [callback] callback(error, data, responseCode)
  */
-function get(url, query, headers, callback)
+function get(hostname, path, query, headers, callback)
 ````
 
 Where:

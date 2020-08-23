@@ -1,20 +1,8 @@
 "use strict";
 
 const qs      = require("querystring");
-const request = require("request");
+const https   = require("https");
 const logger  = require("@popovmp/micro-logger");
-
-const successCodes = [
-    200, // OK 200
-    201, // CREATED 201
-    202, // Accepted 202
-    203, // Partial Information 203
-    204, // No Response 204
-    301, // Moved 301
-    302, // Found 302
-    303, // Method 303
-    304, // Not Modified 304
-];
 
 /**
  * @typedef {function} ResponseCallback
@@ -27,65 +15,65 @@ const successCodes = [
 /**
  * Sends a POST request.
  *
- * @param {string} url
- * @param {Object} form
- * @param {Object} headers
+ * @param {string} hostname
+ * @param {string} path
+ * @param {string} data
+ * @param {OutgoingHttpHeaders} headers
  * @param {ResponseCallback} [callback] callback(error, data, responseCode)
  */
-function post(url, form, headers, callback) {
+function post(hostname, path, data, headers, callback) {
     const options = {
-        method: "POST",
-        url,
-        form,
+        hostname,
+        path,
         headers,
+        port: 443,
+        method: 'POST',
     };
 
-    request(options,
-        request_ready.bind(null, callback));
+    sendRequest(options, data, callback);
 }
 
 /**
  * Sends a GET request.
  *
- * @param {string} url
+ * @param {string} hostname
+ * @param {string} path
  * @param {Object} query
- * @param {Object} headers
- * @param {ResponseCallback} callback
+ * @param {OutgoingHttpHeaders} headers
+ * @param {ResponseCallback} [callback] callback(error, data, responseCode)
  */
-function get(url, query, headers, callback) {
+function get(hostname, path, query, headers, callback) {
     const options = {
-        method: "GET",
-        url: url + (query ? "?" + qs.stringify(query) : ""),
+        hostname,
+        path: path + (query ? "?" + qs.stringify(query) : ""),
         headers,
+        port: 443,
+        method: 'GET',
     };
 
-    request(options,
-        request_ready.bind(null, callback));
+    sendRequest(options, "", callback);
 }
 
-/**
- *
- * @param {ResponseCallback | undefined} callback
- * @param {string | null} err
- * @param {object} res
- * @param {string} body
- */
-function request_ready(callback, err, res, body) {
-    if (err) {
-        logger.error(err, "request-service::request_ready");
-    } else if ( !successCodes.includes(res.statusCode) ) {
-        logger.error("Error: " + res.statusMessage, "request-service::request_ready");
-    }
+function sendRequest(options, data, callback) {
+    const req = https.request(options, (resp) => {
+        const chunks = [];
+        resp.on('data', (chunk) => chunks.push(chunk));
+        resp.on('end', () => {
+            if (typeof callback === "function") {
+                callback(null, chunks.join(""), resp.statusCode);
+            }
+        });
+    });
 
-    if (typeof callback === "function") {
-        if (err) {
-            callback(err, null, res.statusCode);
-        } else if ( successCodes.includes(res.statusCode) ) {
-            callback(null, body, res.statusCode);
-        } else {
-            callback(res.statusMessage, null, res.statusCode);
+    req.on("error", (err) => {
+        logger.error("Error: " + err.message, "request-service::sendRequest");
+        if (typeof callback === "function") {
+            callback(err.message, null);
         }
-    }
+    });
+
+    req.write(data);
+    req.end();
 }
 
 /**

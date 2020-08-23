@@ -7,11 +7,15 @@ const requestService = require("../index.js");
 init("Test request-service");
 
 test("Test `get`", () => {
-    const url     = "https://httpbin.org/get";
-    const query   = {"foo": "bar"};
-    const headers = {"Answer": 42};
+    const hostname = "httpbin.org";
+    const path     = "/get";
+    const query    = {"foo": "bar"};
+    const headers  = {
+        "Client": "request-service",
+        "Answer": 42,
+    };
 
-    requestService.get(url, query, headers,
+    requestService.get(hostname, path, query, headers,
         requestService_get_ready);
 
     return true;
@@ -25,6 +29,7 @@ function requestService_get_ready(err, data, status) {
     if (data) {
         const res = JSON.parse(data);
         console.log("res.args.foo: " + res.args.foo);
+        console.log("res.headers.Client: " + res.headers.Client);
         console.log("res.headers.Answer: " + res.headers.Answer);
     }
 
