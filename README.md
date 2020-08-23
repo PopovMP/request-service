@@ -1,34 +1,33 @@
 # Sends GET and POST requests with a sane callback
 
-**request-service** provides GET and POST request methods, logs errors and calls a callback with Error, Data and StatusCode.  
+**request-service** provides GET and POST request methods, logs errors, and calls a callback with Error, Data and StatusCode.  
 
 Homepage: https://github.com/popovmp/request-service
 
 ## Synopsis
 
-Make a POST request
+Make a **POST** request
 
 ```javascript
 const requestService = require("@popovmp/request-service");
 
-const hostname = "httpbin.org";
+const hostname = "example.org";
 const path     = "/post";
-const data     = JSON.stringify( {"foo": "bar"} );
+const data     = {"foo": "bar"};
 const headers  = {"Answer": 42};
 
 requestService.post(hostname, path, data, headers,
     request_ready);
 ```
 
-Make a GET request
+Make a **GET** request
 
 ```javascript
-const hostname = "httpbin.org";
-const path     = "/get";
-const query    = {"foo": "bar"};
+const hostname = "example.org";
+const path     = "/get?foo=bar";
 const headers  = {"Answer": 42};
 
-requestService.get(hostname, path, query, headers,
+requestService.get(hostname, path, headers,
     request_ready);
 ```
 
@@ -51,11 +50,6 @@ function request_ready(err, data, status) {
 npm install @popovmp/request-service
 ```
 
-## ToDo
-
-Since `request` is deprecated ( https://github.com/request/request/issues/3142 ),
-we have to write own request functionality.
-
 ## Logging errors
 
 **request-service** uses the **micro-logger** ( https://npmjs.com/package/@popovmp/micro-logger ) package for logging errors.
@@ -77,7 +71,7 @@ const logger = require("micro-logger").init("./logs/log.txt");
  *
  * @param {string} hostname
  * @param {string} path
- * @param {string} data
+ * @param {any} data
  * @param {OutgoingHttpHeaders} headers
  * @param {ResponseCallback} [callback] callback(error, data, responseCode)
  */
@@ -90,11 +84,10 @@ function post(hostname, path, data, headers, callback)
  *
  * @param {string} hostname
  * @param {string} path
- * @param {Object} query
  * @param {OutgoingHttpHeaders} headers
  * @param {ResponseCallback} [callback] callback(error, data, responseCode)
  */
-function get(hostname, path, query, headers, callback)
+function get(hostname, path, headers, callback)
 ````
 
 Where:
@@ -107,6 +100,7 @@ Where:
  * @param {string|null} data
  * @param {number} [code] - status code
  */
+function request_ready(err, data, status)
 ````
 
 ## License
