@@ -1,4 +1,4 @@
-# Sends GET and POST requests with sane callback
+# Sends GET and POST requests with a sane callback
 
 **request-service** provides GET and POST request methods, logs errors and calls a callback with Error, Data and StatusCode.  
 
@@ -6,10 +6,10 @@ Homepage: https://github.com/popovmp/request-service
 
 ## Synopsis
 
+Make a POST request
+
 ```javascript
 const requestService = require("@popovmp/request-service");
-
-// POST request
 
 const hostname = "httpbin.org";
 const path     = "/post";
@@ -18,9 +18,11 @@ const headers  = {"Answer": 42};
 
 requestService.post(hostname, path, data, headers,
     request_ready);
+```
 
-// GET request
+Make a GET request
 
+```javascript
 const hostname = "httpbin.org";
 const path     = "/get";
 const query    = {"foo": "bar"};
@@ -28,9 +30,12 @@ const headers  = {"Answer": 42};
 
 requestService.get(hostname, path, query, headers,
     request_ready);
+```
 
-// Calback
 
+The `request-service` accepts equal callback for both GET and POST requests.
+
+```javascript
 function request_ready(err, data, status) {
     if (err) {
         console.error("Error: " + err);
