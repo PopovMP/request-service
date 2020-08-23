@@ -1,5 +1,6 @@
 "use strict";
 
+const qs = require("querystring");
 const {init, test, done} = require("@popovmp/micro-tester");
 
 const requestService = require("../index.js");
@@ -8,14 +9,13 @@ init("Test request-service");
 
 test("Test `get`", () => {
     const hostname = "httpbin.org";
-    const path     = "/get";
-    const query    = {"foo": "bar"};
+    const path     = "/get?" + qs.stringify({"foo": "bar"});
     const headers  = {
         "Client": "request-service",
         "Answer": 42,
     };
 
-    requestService.get(hostname, path, query, headers,
+    requestService.get(hostname, path, headers,
         requestService_get_ready);
 
     return true;

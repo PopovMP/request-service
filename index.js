@@ -1,8 +1,7 @@
 "use strict";
 
-const qs      = require("querystring");
-const https   = require("https");
-const logger  = require("@popovmp/micro-logger");
+const https  = require("https");
+const logger = require("@popovmp/micro-logger");
 
 /**
  * @typedef {function} ResponseCallback
@@ -11,7 +10,6 @@ const logger  = require("@popovmp/micro-logger");
  * @param {string|null} data
  * @param {number} [code] - status code
  */
-
 
 /**
  * @typedef {object} RequestOptions
@@ -30,7 +28,7 @@ const logger  = require("@popovmp/micro-logger");
  * @param {OutgoingHttpHeaders} headers
  * @param {ResponseCallback} [callback] callback(error, data, responseCode)
  */
-function post(hostname, path, data, headers, callback) {
+module.exports.post = function post(hostname, path, data, headers, callback) {
     const options = {
         hostname,
         path,
@@ -51,14 +49,13 @@ function post(hostname, path, data, headers, callback) {
  *
  * @param {string} hostname
  * @param {string} path
- * @param {Object} query
  * @param {OutgoingHttpHeaders} headers
  * @param {ResponseCallback} [callback] callback(error, data, responseCode)
  */
-function get(hostname, path, query, headers, callback) {
+module.exports.get = function get(hostname, path, headers, callback) {
     const options = {
         hostname,
-        path: path + (query ? "?" + qs.stringify(query) : ""),
+        path,
         headers,
         port: 443,
         method: 'GET',
@@ -95,11 +92,3 @@ function sendRequest(options, data, callback) {
     req.write(data);
     req.end();
 }
-
-/**
- * @type {{post, get}}
- */
-module.exports = {
-    post,
-    get,
-};
