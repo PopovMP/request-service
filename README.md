@@ -98,7 +98,7 @@ Where:
  * @typedef {function} ResponseCallback
  *
  * @param {null|string} error
- * @param {string|null} data
+ * @param {Buffer|string|null} data
  * @param {number} [code] - status code
  */
 function request_ready(err, data, status)

@@ -7,7 +7,7 @@ const logger = require("@popovmp/micro-logger");
  * @typedef {function} ResponseCallback
  *
  * @param {null|string} error
- * @param {string|null} data
+ * @param {Buffer|string|null} data
  * @param {number} [code] - status code
  */
 
@@ -33,15 +33,17 @@ module.exports.post = function post(hostname, path, data, headers, callback) {
         hostname,
         path,
         headers,
-        port: 443,
-        method: 'POST',
+        port:   443,
+        method: "POST",
     };
 
-    const dataText = typeof data === "string"
+    const postData = typeof data === "string"
         ? data
-        : JSON.stringify(data);
+        : Buffer.isBuffer(data)
+            ? data
+            : JSON.stringify(data);
 
-    sendRequest(options, dataText, callback);
+    sendRequest(options, postData, callback);
 }
 
 /**
@@ -57,27 +59,31 @@ module.exports.get = function get(hostname, path, headers, callback) {
         hostname,
         path,
         headers,
-        port: 443,
-        method: 'GET',
+        port:   443,
+        method: "GET",
     };
 
-    sendRequest(options, "", callback);
+    sendRequest(options, null, callback);
 }
 
 /**
  * Sends a request
  *
  * @param {RequestOptions} options
- * @param {string} data
+ * @param {Buffer|string|null} postData
  * @param {ResponseCallback} [callback]
  */
-function sendRequest(options, data, callback) {
-    const req = https.request(options, (resp) => {
-        const chunks = [];
-        resp.on('data', (chunk) => chunks.push(chunk));
-        resp.on('end', () => {
+function sendRequest(options, postData, callback) {
+    const req = https.request(options, (res) => {
+        const data = [];
+        res.on('data', (chunk) => data.push(chunk));
+        res.on('end', () => {
             if (typeof callback === "function") {
-                callback(null, chunks.join(""), resp.statusCode);
+                const isBinary = data.length && /\ufffd/.test(data[0]);
+                const resData = isBinary
+                    ? Buffer.concat(data)
+                    : data.join("");
+                callback(null, resData, res.statusCode);
             }
         });
     });
@@ -89,6 +95,9 @@ function sendRequest(options, data, callback) {
         }
     });
 
-    req.write(data);
+    if (postData !== null) {
+        req.write(postData);
+    }
+
     req.end();
 }
