@@ -12,9 +12,10 @@ Make a **POST** request
 const requestService = require("@popovmp/request-service");
 
 const hostname = "example.org";
-const path     = "/post";
-const data     = {"foo": "bar"};
-const headers  = {"Answer": 42};
+const path     = "/post?foo=bar";
+const headers  = {"Username": "John Dowe"};
+
+const data = {"answer": 42}; // Can be anything
 
 requestService.post(hostname, path, data, headers,
     request_ready);
@@ -25,7 +26,7 @@ Make a **GET** request
 ```javascript
 const hostname = "example.org";
 const path     = "/get?foo=bar";
-const headers  = {"Answer": 42};
+const headers  = {"Username": "John Dowe"};
 
 requestService.get(hostname, path, headers,
     request_ready);
