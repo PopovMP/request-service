@@ -1,11 +1,12 @@
 "use strict";
 
 const qs = require("querystring");
-const {init, test, done} = require("@popovmp/micro-tester");
+const assert = require("assert");
+const {init, test, ensure} = require("@popovmp/micro-tester");
 
 const requestService = require("../index.js");
 
-init("Test request-service");
+init("Run post.test.js");
 
 test("Test `post`", () => {
     const hostname = "httpbin.org";
@@ -19,24 +20,39 @@ test("Test `post`", () => {
 
     requestService.post(hostname, path, data, headers,
         requestService_post_ready);
-
-    return true;
 });
 
+// noinspection DuplicatedCode
 function requestService_post_ready(err, data, status) {
     if (err) {
         console.error("Error: " + err);
     }
 
-    if (data) {
-        const res = JSON.parse(data);
-        console.log("res.headers.Client: " + res.headers.Client);
-        console.log("res.headers.Answer: " + res.headers.Answer);
-        console.log("res.args.foo: " + res.args.foo);
-        console.log("res.json.pi: "  + res.json.pi);
-    }
+    test("Response received", () => {
+        assert.ok(data);
+    });
 
-    console.log("Status: " + status);
+    const res = JSON.parse(data);
 
-    done();
+    test("Correct res.args.foo", () => {
+        assert.strictEqual(res.args.foo, "bar");
+    });
+
+    test("Correct string header", () => {
+        assert.strictEqual(res.headers.Client, "request-service");
+    });
+
+    test("Correct numeric header", () => {
+        assert.strictEqual(res.headers.Answer, "42");
+    });
+
+    test("Correct data", () => {
+        assert.strictEqual(res.json.pi, 3.14);
+    });
+
+    test("Status 200", () => {
+        assert.strictEqual(status, 200);
+    });
+
+    ensure();
 }

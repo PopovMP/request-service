@@ -1,17 +1,18 @@
 "use strict"
 
-const {init, test, done} = require("@popovmp/micro-tester");
+const assert = require("assert");
+const {init, test, ensure} = require("@popovmp/micro-tester");
 
 const requestService = require("../index.js");
 
 init("Test request-service");
 
-test("It provides method `post`", () => 
-    typeof requestService.post === "function"
-);
+test("It provides method `post`", () => {
+    assert.strictEqual(typeof requestService.post, "function");
+});
 
-test("It provides method `get`", () => 
-    typeof requestService.get === "function"
-);
+test("It provides method `get`", () => {
+    assert.strictEqual(typeof requestService.get, "function");
+});
 
-done();
+ensure();

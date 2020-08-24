@@ -7,10 +7,10 @@
   "license": "MIT",
   "homepage": "https://github.com/popovmp/request-service",
   "dependencies": {
-    "@popovmp/micro-logger": "^1.2.1"
+    "@popovmp/micro-logger": "^1.3.0"
   },
   "devDependencies": {
-    "@popovmp/micro-tester": "^1.0.1"
+    "@popovmp/micro-tester": "^2.0.0"
   },
   "scripts": {
     "test": "node ./test/all.test.js",
