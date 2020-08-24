@@ -76,13 +76,15 @@ module.exports.get = function get(hostname, path, headers, callback) {
 function sendRequest(options, postData, callback) {
     const req = https.request(options, (res) => {
         const data = [];
+
         res.on('data', (chunk) => data.push(chunk));
+
         res.on('end', () => {
             if (typeof callback === "function") {
-                const isBinary = data.length && /\ufffd/.test(data[0]);
-                const resData = isBinary
+                const resData = Buffer.isBuffer(data[0])
                     ? Buffer.concat(data)
                     : data.join("");
+
                 callback(null, resData, res.statusCode);
             }
         });
@@ -90,6 +92,7 @@ function sendRequest(options, postData, callback) {
 
     req.on("error", (err) => {
         logger.error("Error: " + err.message, "request-service::sendRequest");
+
         if (typeof callback === "function") {
             callback(err.message, null);
         }

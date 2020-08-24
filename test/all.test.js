@@ -2,6 +2,8 @@
 
 require("./index.test");
 
+require("./post.test");
+
 require("./get.test");
 
-require("./post.test");
+require("../test/get-bianry.test");
