@@ -4,25 +4,25 @@ const https  = require("https");
 /**
  * @typedef {function} ResponseCallback
  *
- * @param {null|string} error
- * @param {Buffer|string|null} data
- * @param {number} [code] - status code
+ * @param { null|string        } error
+ * @param { Buffer|string|null } data
+ * @param { number             } [code] - status code
  */
 
 /**
- * @typedef {object} RequestOptions
+ * @typedef { object } RequestOptions
  *
- * @property {string} hostname
- * @property {string} path
- * @property {OutgoingHttpHeaders} header
+ * @property { string              } hostname
+ * @property { string              } path
+ * @property { OutgoingHttpHeaders } header
  */
 
 /**
  * Sends a GET request.
  *
- * @param { string } url
+ * @param { string              } url
  * @param { OutgoingHttpHeaders } headers
- * @param { ResponseCallback } [callback] - optional callback(error, data, code)
+ * @param { ResponseCallback    } [callback] - optional callback(error, data, code)
  */
 function get(url, headers, callback) {
     const options = makeReqOptions(url, headers, "GET");
@@ -33,10 +33,10 @@ function get(url, headers, callback) {
 /**
  * Sends a POST request.
  *
- * @param { string } url
- * @param { any } data
+ * @param { string              } url
+ * @param { any                 } data
  * @param { OutgoingHttpHeaders } headers
- * @param { ResponseCallback } [callback] - optional callback(error, data, code)
+ * @param { ResponseCallback    } [callback] - optional callback(error, data, code)
  */
 function post(url, data, headers, callback) {
     const options = makeReqOptions(url, headers, "POST");
@@ -55,9 +55,9 @@ function post(url, data, headers, callback) {
 /**
  * Parses an URL string
  *
- * @param { string } url
+ * @param { string              } url
  * @param { OutgoingHttpHeaders } headers
- * @param { string } method
+ * @param { string              } method
  *
  * @return { Object }
  */
@@ -76,10 +76,10 @@ function makeReqOptions(url, headers, method) {
 /**
  * Prepares post request headers and sends the request
  *
- * @param { RequestOptions } options
- * @param { string } data
- * @param { string } contentType
- * @param { ResponseCallback } [callback]
+ * @param { RequestOptions     } options
+ * @param { Buffer|string|null } data
+ * @param { string             } contentType
+ * @param { ResponseCallback   } [callback]
  */
 function sendPost(options, data, contentType, callback) {
     options.headers["Content-Length"] = data.length;
@@ -94,9 +94,9 @@ function sendPost(options, data, contentType, callback) {
 /**
  * Sends a request
  *
- * @param {RequestOptions} options
- * @param {Buffer|string|null} postData
- * @param {ResponseCallback} [callback]
+ * @param { RequestOptions     } options
+ * @param { Buffer|string|null } postData
+ * @param { ResponseCallback   } [callback]
  */
 function sendRequest(options, postData, callback) {
     const req = https.request(options, (res) => {
