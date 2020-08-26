@@ -58,17 +58,6 @@ function request_ready(err, data, status) {
 npm install @popovmp/request-service
 ```
 
-## Logging errors
-
-**request-service** uses the **micro-logger** ( https://npmjs.com/package/@popovmp/micro-logger ) package for logging errors.
-
-When **micro-logger** is not initialized, it logs in the console.
-If you want to log the errors in a log file, init **micro-logger** in your `index.js` as follows;
-
-```javascript
-const logger = require("micro-logger").init("./logs/log.txt");
-```
-
 ## Methods
 
 **request-service** exports two methods:
