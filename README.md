@@ -1,7 +1,6 @@
 # Sends GET and POST requests with a sane callback
 
 **request-service** provides GET and POST request methods.
-It sends the request, logs errors, and calls a callback, when it is ready.  
 
 Homepage: https://github.com/popovmp/request-service
 
