@@ -19,23 +19,28 @@ const logger = require("@popovmp/micro-logger");
  */
 
 /**
+ * Sends a GET request.
+ *
+ * @param { string } url
+ * @param { OutgoingHttpHeaders } headers
+ * @param { ResponseCallback } [callback] callback(error, data, responseCode)
+ */
+function get(url, headers, callback) {
+    const options = makeReqOptions(url, headers, "GET");
+
+    sendRequest(options, null, callback);
+}
+
+/**
  * Sends a POST request.
  *
- * @param {string} url
- * @param {any} data
- * @param {OutgoingHttpHeaders} headers
- * @param {ResponseCallback} [callback] callback(error, data, responseCode)
+ * @param { string } url
+ * @param { any } data
+ * @param { OutgoingHttpHeaders } headers
+ * @param { ResponseCallback } [callback] callback(error, data, responseCode)
  */
-module.exports.post = function post(url, data, headers, callback) {
-    const reqUrl = new URL(url);
-
-    const options = {
-        hostname: reqUrl.hostname,
-        path:     reqUrl.pathname + reqUrl.search,
-        headers:  headers,
-        port:     reqUrl.port || (reqUrl.protocol === "https:" ? 443 : 80),
-        method:   "POST",
-    };
+function post(url, data, headers, callback) {
+    const options = makeReqOptions(url, headers, "POST");
 
     const postData = typeof data === "string"
         ? data
@@ -47,24 +52,24 @@ module.exports.post = function post(url, data, headers, callback) {
 }
 
 /**
- * Sends a GET request.
+ * Parses an URL string
  *
- * @param {string} url
- * @param {OutgoingHttpHeaders} headers
- * @param {ResponseCallback} [callback] callback(error, data, responseCode)
+ * @param { string } url
+ * @param { OutgoingHttpHeaders } headers
+ * @param { string } method
+ *
+ * @return { Object }
  */
-module.exports.get = function get(url, headers, callback) {
-    const reqUrl = new URL(url);
+function makeReqOptions(url, headers, method) {
+    const urlObj = new URL(url);
 
-    const options = {
-        hostname: reqUrl.hostname,
-        path:     reqUrl.pathname + reqUrl.search,
-        headers:  headers,
-        port:     reqUrl.port || (reqUrl.protocol === "https:" ? 443 : 80),
-        method:   "GET",
+    return {
+        hostname: urlObj.hostname,
+        path:     urlObj.pathname + urlObj.search,
+        port:     urlObj.port || (urlObj.protocol === "https:" ? 443 : 80),
+        headers,
+        method
     };
-
-    sendRequest(options, null, callback);
 }
 
 /**
@@ -104,4 +109,9 @@ function sendRequest(options, postData, callback) {
     }
 
     req.end();
+}
+
+module.exports = {
+    get,
+    post,
 }
