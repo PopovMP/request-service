@@ -1,6 +1,7 @@
 # Sends GET and POST requests with a sane callback
 
-**request-service** provides GET and POST request methods, logs errors, and calls a callback with Error, Data and StatusCode.  
+**request-service** provides GET and POST request methods.
+It sends the request, logs errors, and calls a callback, when it is ready.  
 
 Homepage: https://github.com/popovmp/request-service
 
@@ -11,27 +12,23 @@ Make a **POST** request
 ```javascript
 const requestService = require("@popovmp/request-service");
 
-const hostname = "example.org";
-const path     = "/post?foo=bar";
-const headers  = {"Username": "John Dowe"};
+const url     = "https://example.com/post?foo=bar";
+const headers = {"Username": "John Dowe"};
+const data    = {"answer": 42}; // Can be anything
 
-const data = {"answer": 42}; // Can be anything
-
-requestService.post(hostname, path, data, headers,
+requestService.post(url, data, headers,
     request_ready);
 ```
 
 Make a **GET** request
 
 ```javascript
-const hostname = "example.org";
-const path     = "/get?foo=bar";
-const headers  = {"Username": "John Dowe"};
+const url     = "https://example.com/get?foo=bar";
+const headers = {"Username": "John Dowe"};
 
-requestService.get(hostname, path, headers,
+requestService.get(url, headers,
     request_ready);
 ```
-
 
 The `request-service` accepts equal callback for both GET and POST requests.
 
@@ -40,7 +37,12 @@ function request_ready(err, data, status) {
     if (err) {
         console.error("Error: " + err);
     }
-    console.log(data);
+
+    const res = Buffer.isBuffer(data)
+            ? data.toString()
+            : data;
+
+    console.log(res);
     console.log("Status: " + status);
 }
 ````
@@ -70,25 +72,23 @@ const logger = require("micro-logger").init("./logs/log.txt");
 /**
  * Sends a POST request.
  *
- * @param {string} hostname
- * @param {string} path
+ * @param {string} url
  * @param {any} data
  * @param {OutgoingHttpHeaders} headers
  * @param {ResponseCallback} [callback] callback(error, data, responseCode)
  */
-function post(hostname, path, data, headers, callback)
+function post(url, data, headers, callback)
 ````
 
 ```javascript
 /**
  * Sends a GET request.
  *
- * @param {string} hostname
- * @param {string} path
+ * @param {string} url
  * @param {OutgoingHttpHeaders} headers
  * @param {ResponseCallback} [callback] callback(error, data, responseCode)
  */
-function get(hostname, path, headers, callback)
+function get(url, headers, callback)
 ````
 
 Where:

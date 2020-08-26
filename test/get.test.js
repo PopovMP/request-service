@@ -1,36 +1,32 @@
 "use strict";
 
-const qs = require("querystring");
 const assert = require("assert");
 const {init, test, ensure} = require("@popovmp/micro-tester");
 
 const requestService = require("../index.js");
 
-init("Run get.test.js");
+const url = "https://httpbin.org/get?foo=bar";
+const headers  = {
+    "Client": "request-service",
+    "Answer": 42,
+};
 
-test("Test `get`", () => {
-    const hostname = "httpbin.org";
-    const path     = "/get?" + qs.stringify({"foo": "bar"});
-    const headers  = {
-        "Client": "request-service",
-        "Answer": 42,
-    };
-
-    requestService.get(hostname, path, headers,
-        requestService_get_ready);
-});
+requestService.get(url, headers,
+    requestService_get_ready);
 
 // noinspection DuplicatedCode
 function requestService_get_ready(err, data, status) {
-    if (err) {
-        console.error("Error: " + err);
-    }
+    init("Run get.test.js");
+
+    test("No errors", () => {
+        assert.ok(!err);
+    });
 
     test("Response received", () => {
         assert.ok(data);
     });
 
-    const res = JSON.parse(data);
+    const res = JSON.parse(data.toString());
 
     test("Correct res.args.foo", () => {
         assert.strictEqual(res.args.foo, "bar");

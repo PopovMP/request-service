@@ -4,6 +4,8 @@ require("./index.test");
 
 require("./post.test");
 
+require("./post-binary.test");
+
 require("./get.test");
 
-require("../test/get-bianry.test");
+require("./get-bianry.test");

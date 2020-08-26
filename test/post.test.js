@@ -1,32 +1,28 @@
 "use strict";
 
-const qs = require("querystring");
 const assert = require("assert");
 const {init, test, ensure} = require("@popovmp/micro-tester");
 
 const requestService = require("../index.js");
 
-init("Run post.test.js");
+const url = "https://httpbin.org/post?foo=bar";
+const headers  = {
+    "Client": "request-service",
+    "Answer": 42,
+};
 
-test("Test `post`", () => {
-    const hostname = "httpbin.org";
-    const path     = "/post?" + qs.stringify({"foo": "bar"});
-    const headers  = {
-        "Client": "request-service",
-        "Answer": 42,
-    };
+const data = {"pi": 3.14};
 
-    const data = {"pi": 3.14};
-
-    requestService.post(hostname, path, data, headers,
-        requestService_post_ready);
-});
+requestService.post(url, data, headers,
+    requestService_post_ready);
 
 // noinspection DuplicatedCode
 function requestService_post_ready(err, data, status) {
-    if (err) {
-        console.error("Error: " + err);
-    }
+    init("Run post.test.js");
+
+    test("No errors", () => {
+        assert.ok(!err);
+    });
 
     test("Response received", () => {
         assert.ok(data);

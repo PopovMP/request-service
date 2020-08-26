@@ -5,29 +5,25 @@ const {init, test, ensure} = require("@popovmp/micro-tester");
 
 const requestService = require("../index.js");
 
-init("Run post.test.js");
+const url = "https://httpbin.org/post?foo=bar";
+const headers  = {};
 
-test("Test `post`", () => {
-    const hostname = "httpbin.org";
-    const path     = "/post";
-    const headers  = {};
+const data = Buffer.from("foo");
 
-    const data = Buffer.from("foo");
-
-    requestService.post(hostname, path, data, headers,
-        requestService_post_ready);
-});
+requestService.post(url, data, headers,
+    requestService_post_ready);
 
 // noinspection DuplicatedCode
 function requestService_post_ready(err, data, status) {
-    if (err) {
-        console.error("Error: " + err);
-    }
+    init("Run post.test.js");
+
+    test("No errors", () => {
+        assert.ok(!err);
+    });
 
     test("Response received", () => {
         assert.ok(data);
     });
-
 
     test("Receive buffer", () => {
         assert.ok(Buffer.isBuffer(data));

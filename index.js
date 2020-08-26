@@ -1,5 +1,4 @@
 "use strict";
-
 const https  = require("https");
 const logger = require("@popovmp/micro-logger");
 
@@ -22,19 +21,20 @@ const logger = require("@popovmp/micro-logger");
 /**
  * Sends a POST request.
  *
- * @param {string} hostname
- * @param {string} path
+ * @param {string} url
  * @param {any} data
  * @param {OutgoingHttpHeaders} headers
  * @param {ResponseCallback} [callback] callback(error, data, responseCode)
  */
-module.exports.post = function post(hostname, path, data, headers, callback) {
+module.exports.post = function post(url, data, headers, callback) {
+    const reqUrl = new URL(url);
+
     const options = {
-        hostname,
-        path,
-        headers,
-        port:   443,
-        method: "POST",
+        hostname: reqUrl.hostname,
+        path:     reqUrl.pathname + reqUrl.search,
+        headers:  headers,
+        port:     reqUrl.port || (reqUrl.protocol === "https:" ? 443 : 80),
+        method:   "POST",
     };
 
     const postData = typeof data === "string"
@@ -49,18 +49,19 @@ module.exports.post = function post(hostname, path, data, headers, callback) {
 /**
  * Sends a GET request.
  *
- * @param {string} hostname
- * @param {string} path
+ * @param {string} url
  * @param {OutgoingHttpHeaders} headers
  * @param {ResponseCallback} [callback] callback(error, data, responseCode)
  */
-module.exports.get = function get(hostname, path, headers, callback) {
+module.exports.get = function get(url, headers, callback) {
+    const reqUrl = new URL(url);
+
     const options = {
-        hostname,
-        path,
-        headers,
-        port:   443,
-        method: "GET",
+        hostname: reqUrl.hostname,
+        path:     reqUrl.pathname + reqUrl.search,
+        headers:  headers,
+        port:     reqUrl.port || (reqUrl.protocol === "https:" ? 443 : 80),
+        method:   "GET",
     };
 
     sendRequest(options, null, callback);
