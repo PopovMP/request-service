@@ -8,4 +8,4 @@ require("./post-binary.test");
 
 require("./get.test");
 
-require("./get-bianry.test");
+require("./get-binary.test");
