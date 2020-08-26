@@ -141,7 +141,7 @@ function sendRequest(options, postData, callback) {
      * @param { string          } contentType
      */
     function res_end(data, contentType) {
-        if (contentType === "application/json") {
+        if ( contentType.toLowerCase().includes("application/json") ) {
             try {
                 callback(null, JSON.parse(data));
             } catch (e) {
