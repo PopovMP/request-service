@@ -1,6 +1,5 @@
 "use strict";
 const https  = require("https");
-const logger = require("@popovmp/micro-logger");
 
 /**
  * @typedef {function} ResponseCallback
@@ -117,8 +116,6 @@ function sendRequest(options, postData, callback) {
     });
 
     req.on("error", (err) => {
-        logger.error("Error: " + err.message, "request-service::sendRequest");
-
         if (typeof callback === "function") {
             callback(err.message, null);
         }
