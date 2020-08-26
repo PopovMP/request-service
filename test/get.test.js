@@ -26,9 +26,9 @@ function requestService_get_ready(err, data, status) {
         assert.ok(data);
     });
 
-    const res = JSON.parse(data.toString());
+    const res = JSON.parse(data);
 
-    test("Correct res.args.foo", () => {
+    test("Correct query", () => {
         assert.strictEqual(res.args.foo, "bar");
     });
 

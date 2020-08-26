@@ -30,7 +30,7 @@ function requestService_post_ready(err, data, status) {
 
     const res = JSON.parse(data);
 
-    test("Correct res.args.foo", () => {
+    test("Correct query", () => {
         assert.strictEqual(res.args.foo, "bar");
     });
 
