@@ -1,6 +1,6 @@
 {
   "name": "@popovmp/request-service",
-  "version": "4.2.0",
+  "version": "4.2.1",
   "description": "Sends GET and POST requests with a sane callback",
   "main": "index.js",
   "author": "Popov MP <info@forexsb.com>",
