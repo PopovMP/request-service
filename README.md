@@ -38,14 +38,19 @@ function request_ready(err, data, status) {
         console.error("Error: " + err);
     }
 
-    const res = Buffer.isBuffer(data)
-            ? data.toString()
-            : data;
-
-    console.log(res);
+    console.log(data);
     console.log("Status: " + status);
 }
 ````
+
+## Default Content-Type header
+
+**request-service** sets default Content-Type header for the **POST** requests depending on the `data` type.
+
+  - Buffer => `Content-Type: application/octet-stream`
+  - Object => `Content-Type: application/json`
+  - String => `Content-Type: application/x-www-form-urlencoded`
+  - Any => `Content-Type: text/plain`
 
 ## Installation
 
