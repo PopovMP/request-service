@@ -1,5 +1,6 @@
 "use strict";
 
+const http  = require("http");
 const https = require("https");
 
 /**
@@ -14,7 +15,10 @@ const https = require("https");
  *
  * @property { string              } hostname
  * @property { string              } path
+ * @property { number              } port
+ * @property { string              } protocol
  * @property { OutgoingHttpHeaders } header
+ * @property { string              } method
  */
 
 /**
@@ -65,7 +69,7 @@ function post(url, data, headers, callback) {
  * @param { OutgoingHttpHeaders } headers
  * @param { string              } method
  *
- * @return { Object }
+ * @return { RequestOptions }
  */
 function makeReqOptions(url, headers, method) {
     const urlObj = new URL(url);
@@ -74,6 +78,7 @@ function makeReqOptions(url, headers, method) {
         hostname: urlObj.hostname,
         path:     urlObj.pathname + urlObj.search,
         port:     urlObj.port || (urlObj.protocol === "https:" ? 443 : 80),
+        protocol: urlObj.protocol,
         headers,
         method
     };
@@ -107,7 +112,8 @@ function sendPost(options, data, contentType, callback) {
  * @param { ResponseCallback   } callback
  */
 function sendRequest(options, postData, callback) {
-    const req = https.request(options, reqCallback);
+    const transporter = options.protocol === "https:" ? https : http;
+    const req = transporter.request(options, reqCallback);
 
     req.on("error", (err) => {
         callback(err.message, null);
