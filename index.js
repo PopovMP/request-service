@@ -23,7 +23,7 @@ const logger = require("@popovmp/micro-logger");
  *
  * @param { string } url
  * @param { OutgoingHttpHeaders } headers
- * @param { ResponseCallback } [callback] callback(error, data, responseCode)
+ * @param { ResponseCallback } [callback] - optional callback(error, data, code)
  */
 function get(url, headers, callback) {
     const options = makeReqOptions(url, headers, "GET");
@@ -37,18 +37,20 @@ function get(url, headers, callback) {
  * @param { string } url
  * @param { any } data
  * @param { OutgoingHttpHeaders } headers
- * @param { ResponseCallback } [callback] callback(error, data, responseCode)
+ * @param { ResponseCallback } [callback] - optional callback(error, data, code)
  */
 function post(url, data, headers, callback) {
     const options = makeReqOptions(url, headers, "POST");
 
-    const postData = typeof data === "string"
-        ? data
-        : Buffer.isBuffer(data)
-            ? data
-            : JSON.stringify(data);
-
-    sendRequest(options, postData, callback);
+    if (Buffer.isBuffer(data)) {
+        sendPost(options, data.toString(), "application/octet-stream", callback);
+    } else if (typeof data === "object") {
+        sendPost(options, JSON.stringify(data), "application/json", callback);
+    } else if (typeof data === "string") {
+        sendPost(options, data, "application/x-www-form-urlencoded", callback);
+    } else {
+        sendPost(options, String(data), "text/plain", callback);
+    }
 }
 
 /**
@@ -70,6 +72,24 @@ function makeReqOptions(url, headers, method) {
         headers,
         method
     };
+}
+
+/**
+ * Prepares post request headers and sends the request
+ *
+ * @param { RequestOptions } options
+ * @param { string } data
+ * @param { string } contentType
+ * @param { ResponseCallback } [callback]
+ */
+function sendPost(options, data, contentType, callback) {
+    options.headers["Content-Length"] = data.length;
+
+    if (!options.headers["Content-Type"]) {
+        options.headers["Content-Type"] = contentType;
+    }
+
+    sendRequest(options, data, callback);
 }
 
 /**
