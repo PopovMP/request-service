@@ -12,7 +12,7 @@ requestService.get(url, headers,
     requestService_get_ready);
 
 // noinspection DuplicatedCode
-function requestService_get_ready(err, data, status) {
+function requestService_get_ready(err, data) {
     init("Run get-binary.test.js");
 
     test("No errors", () => {
@@ -29,10 +29,6 @@ function requestService_get_ready(err, data, status) {
 
     test("Correct buffer length", () => {
         assert.strictEqual(data.length, 35463);
-    });
-
-    test("Status 200", () => {
-        assert.strictEqual(status, 200);
     });
 
     ensure();

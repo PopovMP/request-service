@@ -17,7 +17,7 @@ requestService.post(url, data, headers,
     requestService_post_ready);
 
 // noinspection DuplicatedCode
-function requestService_post_ready(err, data, status) {
+function requestService_post_ready(err, data) {
     init("Run post.test.js");
 
     test("No errors", () => {
@@ -28,26 +28,20 @@ function requestService_post_ready(err, data, status) {
         assert.ok(data);
     });
 
-    const res = JSON.parse(data);
-
     test("Correct query", () => {
-        assert.strictEqual(res.args.foo, "bar");
+        assert.strictEqual(data.args.foo, "bar");
     });
 
     test("Correct string header", () => {
-        assert.strictEqual(res.headers.Client, "request-service");
+        assert.strictEqual(data.headers.Client, "request-service");
     });
 
     test("Correct numeric header", () => {
-        assert.strictEqual(res.headers.Answer, "42");
+        assert.strictEqual(data.headers.Answer, "42");
     });
 
     test("Correct data", () => {
-        assert.strictEqual(res.json.pi, 3.14);
-    });
-
-    test("Status 200", () => {
-        assert.strictEqual(status, 200);
+        assert.strictEqual(data.json.pi, 3.14);
     });
 
     ensure();

@@ -1,12 +1,12 @@
 "use strict";
-const https  = require("https");
+
+const https = require("https");
 
 /**
  * @typedef {function} ResponseCallback
  *
  * @param { null|string        } error
  * @param { Buffer|string|null } data
- * @param { number             } [code] - status code
  */
 
 /**
@@ -22,7 +22,7 @@ const https  = require("https");
  *
  * @param { string              } url
  * @param { OutgoingHttpHeaders } headers
- * @param { ResponseCallback    } [callback] - optional callback(error, data, code)
+ * @param { ResponseCallback    } callback - callback(error, data)
  */
 function get(url, headers, callback) {
     const options = makeReqOptions(url, headers, "GET");
@@ -36,7 +36,7 @@ function get(url, headers, callback) {
  * @param { string              } url
  * @param { any                 } data
  * @param { OutgoingHttpHeaders } headers
- * @param { ResponseCallback    } [callback] - optional callback(error, data, code)
+ * @param { ResponseCallback    } callback - optional callback(error, data)
  */
 function post(url, data, headers, callback) {
     const options = makeReqOptions(url, headers, "POST");
@@ -47,6 +47,8 @@ function post(url, data, headers, callback) {
         sendPost(options, JSON.stringify(data), "application/json", callback);
     } else if (typeof data === "string") {
         sendPost(options, data, "application/x-www-form-urlencoded", callback);
+    } else if (data === null) {
+        sendPost(options, null, "", callback);
     } else {
         sendPost(options, String(data), "text/plain", callback);
     }
@@ -79,12 +81,14 @@ function makeReqOptions(url, headers, method) {
  * @param { RequestOptions     } options
  * @param { Buffer|string|null } data
  * @param { string             } contentType
- * @param { ResponseCallback   } [callback]
+ * @param { ResponseCallback   } callback
  */
 function sendPost(options, data, contentType, callback) {
-    options.headers["Content-Length"] = data.length;
+    if (Buffer.isBuffer(data) || typeof data === "string") {
+        options.headers["Content-Length"] = data.length;
+    }
 
-    if (!options.headers["Content-Type"]) {
+    if (contentType && !options.headers["Content-Type"]) {
         options.headers["Content-Type"] = contentType;
     }
 
@@ -96,36 +100,57 @@ function sendPost(options, data, contentType, callback) {
  *
  * @param { RequestOptions     } options
  * @param { Buffer|string|null } postData
- * @param { ResponseCallback   } [callback]
+ * @param { ResponseCallback   } callback
  */
 function sendRequest(options, postData, callback) {
-    const req = https.request(options, (res) => {
-        const data = [];
-
-        res.on('data', (chunk) => data.push(chunk));
-
-        res.on('end', () => {
-            if (typeof callback === "function") {
-                const resData = Buffer.isBuffer(data[0])
-                    ? Buffer.concat(data)
-                    : data.join("");
-
-                callback(null, resData, res.statusCode);
-            }
-        });
-    });
+    const req = https.request(options, reqCallback);
 
     req.on("error", (err) => {
-        if (typeof callback === "function") {
-            callback(err.message, null);
-        }
+        callback(err.message, null);
     });
 
-    if (postData !== null) {
+    if (postData) {
         req.write(postData);
     }
 
     req.end();
+
+    /**
+     * @param  { IncomingMessage } res
+     */
+    function reqCallback(res) {
+        const data = [];
+
+        res.on('data', (chunk) => {
+            data.push(chunk);
+        });
+
+        res.on('end', () => {
+            const resData = Buffer.isBuffer(data[0])
+                ? Buffer.concat(data)
+                : data.join("");
+
+            res_end(resData, res.headers["content-type"]);
+        });
+    }
+
+    /**
+     * Prepares response data and calls the callback
+     *
+     * @param { string | Buffer } data
+     * @param { string          } contentType
+     */
+    function res_end(data, contentType) {
+        if (contentType === "application/json") {
+            try {
+                callback(null, JSON.parse(data));
+            } catch (e) {
+                callback(e.message, null);
+            }
+        } else {
+            callback(null, data);
+        }
+    }
 }
 
 module.exports = {

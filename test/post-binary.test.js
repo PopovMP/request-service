@@ -14,7 +14,7 @@ requestService.post(url, data, headers,
     requestService_post_ready);
 
 // noinspection DuplicatedCode
-function requestService_post_ready(err, data, status) {
+function requestService_post_ready(err, data) {
     init("Run post.test.js");
 
     test("No errors", () => {
@@ -25,17 +25,8 @@ function requestService_post_ready(err, data, status) {
         assert.ok(data);
     });
 
-    test("Receive buffer", () => {
-        assert.ok(Buffer.isBuffer(data));
-    });
-
     test("Correct data", () => {
-        const res = JSON.parse(data); // Because https://httpbin.org returns JSON
-        assert.strictEqual(res.data, "foo");
-    });
-
-    test("Status 200", () => {
-        assert.strictEqual(status, 200);
+        assert.strictEqual(data.data, "foo");
     });
 
     ensure();
