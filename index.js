@@ -3,10 +3,10 @@
 const https = require("https");
 
 /**
- * @typedef {function} ResponseCallback
+ * @typedef { function } ResponseCallback
  *
- * @param { null|string        } error
- * @param { Buffer|string|null } data
+ * @param { null | string } error
+ * @param { Buffer | Object | string | null } data
  */
 
 /**
@@ -147,7 +147,7 @@ function sendRequest(options, postData, callback) {
     function res_end(data, contentType) {
         if ( contentType.toLowerCase().includes("application/json") ) {
             try {
-                callback(null, JSON.parse(data));
+                callback(null, JSON.parse(data) );
             } catch (e) {
                 callback(e.message, null);
             }

@@ -55,6 +55,17 @@ npm install @popovmp/request-service
   - Object => `Content-Type: application/json`
   - String => `Content-Type: application/x-www-form-urlencoded`
   - Any => `Content-Type: text/plain`
+
+# Callback data
+
+**request-service** call the given callback when the request is ready.
+
+In case of an error, the callback brings `error.message` and `null`.
+
+When there is no error, it is called with `null` and `data`. The `data` can be `Buffer`, `Object`, `string` or `null`.
+
+When the response has a `Content-Type: application/json` header, the callback receives `JSON.parse(data)`.
+
 ## Methods
 
 **request-service** exports two methods:
@@ -86,7 +97,7 @@ Where:
 
 ```javascript
 /**
- * @typedef {function} ResponseCallback
+ * @typedef { function } ResponseCallback
  *
  * @param { null | string } error
  * @param { Buffer | Object | string | null } data
