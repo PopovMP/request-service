@@ -42,7 +42,7 @@ function post(url, data, headers, callback) {
     const options = makeReqOptions(url, headers, "POST");
 
     if (Buffer.isBuffer(data)) {
-        sendPost(options, data.toString(), "application/octet-stream", callback);
+        sendPost(options, data, "application/octet-stream", callback);
     } else if (typeof data === "object") {
         sendPost(options, JSON.stringify(data), "application/json", callback);
     } else if (typeof data === "string") {
