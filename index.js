@@ -41,15 +41,19 @@ function get(url, headers, callback) {
 function post(url, data, headers, callback) {
     const options = makeReqOptions(url, headers, "POST");
 
-    if (Buffer.isBuffer(data)) {
-        sendPost(options, data, "application/octet-stream", callback);
-    } else if (typeof data === "object") {
-        sendPost(options, JSON.stringify(data), "application/json", callback);
-    } else if (typeof data === "string") {
-        sendPost(options, data, "application/x-www-form-urlencoded", callback);
-    } else if (data === null) {
+    if (data === null) {
         sendPost(options, null, "", callback);
-    } else {
+    }
+    else if ( Buffer.isBuffer(data) ) {
+        sendPost(options, data, "application/octet-stream", callback);
+    }
+    else if (typeof data === "object") {
+        sendPost(options, JSON.stringify(data), "application/json", callback);
+    }
+    else if (typeof data === "string") {
+        sendPost(options, data, "application/x-www-form-urlencoded", callback);
+    }
+    else {
         sendPost(options, String(data), "text/plain", callback);
     }
 }
