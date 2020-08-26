@@ -32,15 +32,20 @@ requestService.get(url, headers,
 The `request-service` accepts equal callback for both GET and POST requests.
 
 ```javascript
-function request_ready(err, data, status) {
+function request_ready(err, data) {
     if (err) {
         console.error("Error: " + err);
     }
 
     console.log(data);
-    console.log("Status: " + status);
 }
 ````
+
+## Installation
+
+```
+npm install @popovmp/request-service
+```
 
 ## Default Content-Type header
 
@@ -50,13 +55,6 @@ function request_ready(err, data, status) {
   - Object => `Content-Type: application/json`
   - String => `Content-Type: application/x-www-form-urlencoded`
   - Any => `Content-Type: text/plain`
-
-## Installation
-
-```
-npm install @popovmp/request-service
-```
-
 ## Methods
 
 **request-service** exports two methods:
@@ -68,7 +66,7 @@ npm install @popovmp/request-service
  * @param {string} url
  * @param {any} data
  * @param {OutgoingHttpHeaders} headers
- * @param {ResponseCallback} [callback] callback(error, data, responseCode)
+ * @param {ResponseCallback} callback callback(error, data)
  */
 function post(url, data, headers, callback)
 ````
@@ -79,7 +77,7 @@ function post(url, data, headers, callback)
  *
  * @param {string} url
  * @param {OutgoingHttpHeaders} headers
- * @param {ResponseCallback} [callback] callback(error, data, responseCode)
+ * @param {ResponseCallback} callback callback(error, data)
  */
 function get(url, headers, callback)
 ````
@@ -90,11 +88,10 @@ Where:
 /**
  * @typedef {function} ResponseCallback
  *
- * @param {null|string} error
- * @param {Buffer|string|null} data
- * @param {number} [code] - status code
+ * @param { null | string } error
+ * @param { Buffer | Object | string | null } data
  */
-function request_ready(err, data, status)
+function request_ready(err, data)
 ````
 
 ## License
