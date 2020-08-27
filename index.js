@@ -165,30 +165,41 @@ function sendRequest(options, postData, callback) {
         });
 
         res.on('end', () => {
-            const resData = Buffer.isBuffer(data[0])
-                ? Buffer.concat(data)
-                : data.join("");
+            /** @type { Buffer | Object | string } */
+            let resData;
 
-            res_end(resData, res.headers["content-type"]);
+            try {
+                resData = parseResData(Buffer.concat(data), res.headers["content-type"]);
+            } catch (e) {
+                callback(e.message, null);
+            }
+
+            callback(null, resData);
         });
     }
 
     /**
-     * Prepares response data and calls the callback
+     * Prepares response data
      *
-     * @param { string | Buffer } data
-     * @param { string          } contentType
+     * @param { Buffer } buffer
+     * @param { string } contentType
+     *
+     * @return { Buffer | Object | string }
      */
-    function res_end(data, contentType) {
-        if ( contentType.toLowerCase().includes("application/json") ) {
-            try {
-                callback(null, JSON.parse(data) );
-            } catch (e) {
-                callback(e.message, null);
-            }
-        } else {
-            callback(null, data);
+    function parseResData(buffer, contentType) {
+        if (contentType.includes("octet-stream")) {
+            return buffer;
         }
+
+        if (contentType.includes("json")) {
+            return JSON.parse(buffer.toString());
+        }
+
+        if (contentType.includes("urlencoded")) {
+            return queryString.parse(buffer.toString());
+        }
+
+        return buffer.toString();
     }
 }
 
