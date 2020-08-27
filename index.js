@@ -2,6 +2,7 @@
 
 const http  = require("http");
 const https = require("https");
+const queryString = require("querystring");
 
 /**
  * @typedef { function } ResponseCallback
@@ -32,6 +33,20 @@ function get(url, headers, callback) {
     const options = makeReqOptions(url, headers, "GET");
 
     sendRequest(options, null, callback);
+}
+
+/**
+ * Sends a POST request with "Content-Type: application/x-www-form-urlencoded".
+ *
+ * @param { string              } url
+ * @param { object              } data - values can be object, string, numbers or arrays.
+ * @param { OutgoingHttpHeaders } headers
+ * @param { ResponseCallback    } callback - optional callback(error, data)
+ */
+function form(url, data, headers, callback) {
+    const options = makeReqOptions(url, headers, "POST");
+    const postForm = queryString.stringify(data);
+    sendPost(options, postForm, "application/x-www-form-urlencoded", callback);
 }
 
 /**
@@ -165,5 +180,6 @@ function sendRequest(options, postData, callback) {
 
 module.exports = {
     get,
+    form,
     post,
 }
