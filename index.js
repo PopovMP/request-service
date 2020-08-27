@@ -50,6 +50,20 @@ function form(url, data, headers, callback) {
 }
 
 /**
+ * Sends a POST request with "Content-Type: application/json".
+ *
+ * @param { string              } url
+ * @param { object              } data
+ * @param { OutgoingHttpHeaders } headers
+ * @param { ResponseCallback    } callback - optional callback(error, data)
+ */
+function json(url, data, headers, callback) {
+    const options = makeReqOptions(url, headers, "POST");
+    const postForm = JSON.stringify(data);
+    sendPost(options, postForm, "application/json", callback);
+}
+
+/**
  * Sends a POST request.
  *
  * @param { string              } url
@@ -181,5 +195,6 @@ function sendRequest(options, postData, callback) {
 module.exports = {
     get,
     form,
+    json,
     post,
 }
