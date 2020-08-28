@@ -29,6 +29,19 @@ const queryString = require('querystring');
  * @param { OutgoingHttpHeaders } headers
  * @param { ResponseCallback    } callback - callback(error, data)
  */
+function head(url, headers, callback) {
+    const options = makeReqOptions(url, headers, 'HEAD');
+
+    sendRequest(options, null, callback);
+}
+
+/**
+ * Sends a GET request.
+ *
+ * @param { string              } url
+ * @param { OutgoingHttpHeaders } headers
+ * @param { ResponseCallback    } callback - callback(error, data)
+ */
 function get(url, headers, callback) {
     const options = makeReqOptions(url, headers, 'GET');
 
@@ -213,6 +226,7 @@ function sendRequest(options, postData, callback) {
 }
 
 module.exports = {
+    head,
     get,
     post,
     form,
