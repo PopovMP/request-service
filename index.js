@@ -165,11 +165,11 @@ function sendRequest(options, postData, callback) {
     function reqCallback(res) {
         const data = [];
 
-        res.on('data', (chunk) => {
+        res.on("data", (chunk) => {
             data.push(chunk);
         });
 
-        res.on('end', () => {
+        res.on("end", () => {
             /** @type { Buffer | Object | string } */
             let resData = null;
             let err     = null;
