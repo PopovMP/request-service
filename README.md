@@ -10,8 +10,8 @@ Homepage: https://github.com/popovmp/request-service#readme
 Make a **GET** request
 
 ```javascript
-const url     = "https://example.com/get?foo=bar";
-const headers = {"Username": "John Dowe"};
+const url     = 'https://example.com/get?foo=bar';
+const headers = {'Username': 'John Dowe'};
 
 requestService.get(url, headers,
     request_ready);
@@ -20,11 +20,11 @@ requestService.get(url, headers,
 Make a **POST** request
 
 ```javascript
-const requestService = require("@popovmp/request-service");
+const requestService = require('@popovmp/request-service');
 
-const url     = "https://example.com/post?foo=bar";
-const data    = {"answer": 42}; // Can be anything
-const headers = {"Username": "John Dowe"};
+const url     = 'https://example.com/post?foo=bar';
+const data    = {answer: 42}; // Can be anything
+const headers = {'Username': 'John Dowe'};
 
 requestService.post(url, data, headers,
     request_ready);
@@ -33,10 +33,10 @@ requestService.post(url, data, headers,
 **POST form** request with a `Content-Type: x-www-form-urlencoded` header
 
 ```javascript
-const requestService = require("@popovmp/request-service");
+const requestService = require('@popovmp/request-service');
 
-const url     = "https://example.com/form";
-const form    = {"name": "John Dowe", "email": "john@example.com"};
+const url     = 'https://example.com/form';
+const form    = {name: 'John Dowe', email: 'john@example.com'};
 const headers = {};
 
 requestService.form(url, form, headers,
@@ -46,10 +46,10 @@ requestService.form(url, form, headers,
 **POST json** request with a `Content-Type: application/json` header
 
 ```javascript
-const requestService = require("@popovmp/request-service");
+const requestService = require('@popovmp/request-service');
 
-const url     = "https://example.com/api";
-const object  = {"answer": 42, "numbers": [1, 2, 3, 4]};
+const url     = 'https://example.com/api';
+const object  = {answer: 42, numbers: [1, 2, 3, 4]};
 const headers = {};
 
 requestService.json(url, object, headers,
@@ -61,7 +61,7 @@ The **request-service** accepts equal callback for both GET and POST requests.
 ```javascript
 function request_ready(err, data) {
     if (err) {
-        console.error("Error: " + err);
+        console.error('Error: ' + err);
     }
 
     console.log(data);
@@ -79,7 +79,7 @@ npm install @popovmp/request-service
 If, you do not provide a `Content-Type` header, **request-service** sets a default `Content-Type` header
 for the **POST** requests depending on the `data` type.
 
-  - null => `""`
+  - null => `''`
   - Buffer => `Content-Type: application/octet-stream`
   - Object => `Content-Type: application/json`
   - String => `Content-Type: text/plain`
@@ -129,7 +129,7 @@ function post(url, data, headers, callback)
 
 ```javascript
 /**
- * Sends a POST request with "Content-Type: application/x-www-form-urlencoded".
+ * Sends a POST request with 'Content-Type: application/x-www-form-urlencoded'.
  *
  * @param { string              } url
  * @param { object              } data - values can be object, string, numbers or arrays.
@@ -142,7 +142,7 @@ function form(url, data, headers, callback)
 ```javascript
 
 /**
- * Sends a POST request with "Content-Type: application/json".
+ * Sends a POST request with 'Content-Type: application/json'.
  *
  * @param { string              } url
  * @param { object              } data
