@@ -124,7 +124,7 @@ function makeReqOptions(url, headers, method) {
  */
 function sendPost(options, data, contentType, callback) {
     if (Buffer.isBuffer(data) || typeof data === "string") {
-        options.headers["Content-Length"] = data.length;
+        options.headers["Content-Length"] = Buffer.byteLength(data);
     }
 
     if (contentType && !options.headers["Content-Type"]) {
