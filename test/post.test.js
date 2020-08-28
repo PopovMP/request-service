@@ -3,7 +3,7 @@
 const assert = require("assert");
 const {init, test, ensure} = require("@popovmp/micro-tester");
 
-const requestService = require("../index.js");
+const request = require("../index.js");
 
 const url = "https://httpbin.org/post?foo=bar";
 const headers  = {
@@ -13,7 +13,7 @@ const headers  = {
 
 const data = {"pi": 3.14};
 
-requestService.post(url, data, headers,
+request.post(url, data, headers,
     requestService_post_ready);
 
 // noinspection DuplicatedCode

@@ -3,7 +3,7 @@
 const assert = require("assert");
 const {init, test, ensure} = require("@popovmp/micro-tester");
 
-const requestService = require("../index.js");
+const request = require("../index.js");
 
 const url = "https://httpbin.org/get?foo=bar";
 const headers  = {
@@ -11,7 +11,7 @@ const headers  = {
     "Answer": 42,
 };
 
-requestService.get(url, headers,
+request.get(url, headers,
     requestService_get_ready);
 
 // noinspection DuplicatedCode
