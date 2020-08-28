@@ -36,34 +36,6 @@ function get(url, headers, callback) {
 }
 
 /**
- * Sends a POST request with "Content-Type: application/x-www-form-urlencoded".
- *
- * @param { string              } url
- * @param { object              } data - values can be object, string, numbers or arrays.
- * @param { OutgoingHttpHeaders } headers
- * @param { ResponseCallback    } callback - optional callback(error, data)
- */
-function form(url, data, headers, callback) {
-    const options = makeReqOptions(url, headers, "POST");
-    const postForm = queryString.stringify(data);
-    sendPost(options, postForm, "application/x-www-form-urlencoded", callback);
-}
-
-/**
- * Sends a POST request with "Content-Type: application/json".
- *
- * @param { string              } url
- * @param { object              } data
- * @param { OutgoingHttpHeaders } headers
- * @param { ResponseCallback    } callback - optional callback(error, data)
- */
-function json(url, data, headers, callback) {
-    const options = makeReqOptions(url, headers, "POST");
-    const postForm = JSON.stringify(data);
-    sendPost(options, postForm, "application/json", callback);
-}
-
-/**
  * Sends a POST request.
  *
  * @param { string              } url
@@ -84,11 +56,39 @@ function post(url, data, headers, callback) {
         sendPost(options, JSON.stringify(data), "application/json", callback);
     }
     else if (typeof data === "string") {
-        sendPost(options, data, "application/x-www-form-urlencoded", callback);
+        sendPost(options, data, "text/plain", callback);
     }
     else {
         sendPost(options, String(data), "text/plain", callback);
     }
+}
+
+/**
+ * Sends a POST request with "Content-Type: application/x-www-form-urlencoded".
+ *
+ * @param { string              } url
+ * @param { object              } data - values can be object, string, numbers or arrays.
+ * @param { OutgoingHttpHeaders } headers
+ * @param { ResponseCallback    } callback - optional callback(error, data)
+ */
+function form(url, data, headers, callback) {
+    const options  = makeReqOptions(url, headers, "POST");
+    const postForm = queryString.stringify(data);
+    sendPost(options, postForm, "application/x-www-form-urlencoded", callback);
+}
+
+/**
+ * Sends a POST request with "Content-Type: application/json".
+ *
+ * @param { string              } url
+ * @param { object              } data
+ * @param { OutgoingHttpHeaders } headers
+ * @param { ResponseCallback    } callback - optional callback(error, data)
+ */
+function json(url, data, headers, callback) {
+    const options  = makeReqOptions(url, headers, "POST");
+    const postText = JSON.stringify(data);
+    sendPost(options, postText, "application/json", callback);
 }
 
 /**
@@ -101,6 +101,7 @@ function post(url, data, headers, callback) {
  * @return { RequestOptions }
  */
 function makeReqOptions(url, headers, method) {
+    /** @type { URL } */
     const urlObj = new URL(url);
 
     return {
@@ -141,8 +142,12 @@ function sendPost(options, data, contentType, callback) {
  * @param { ResponseCallback   } callback
  */
 function sendRequest(options, postData, callback) {
-    const transporter = options.protocol === "https:" ? https : http;
-    const req = transporter.request(options, reqCallback);
+    const transporter = options.protocol === "https:"
+        ? https
+        : http;
+
+    const req = transporter.request(options,
+        reqCallback);
 
     req.on("error", (err) => {
         callback(err.message, null);
@@ -166,15 +171,16 @@ function sendRequest(options, postData, callback) {
 
         res.on('end', () => {
             /** @type { Buffer | Object | string } */
-            let resData;
+            let resData = null;
+            let err     = null;
 
             try {
                 resData = parseResData(Buffer.concat(data), res.headers["content-type"]);
             } catch (e) {
-                callback(e.message, null);
+                err = e.message;
             }
 
-            callback(null, resData);
+            callback(err, resData);
         });
     }
 
@@ -205,7 +211,7 @@ function sendRequest(options, postData, callback) {
 
 module.exports = {
     get,
+    post,
     form,
     json,
-    post,
 }
