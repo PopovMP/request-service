@@ -6,7 +6,7 @@ const {init, test, ensure} = require("@popovmp/micro-tester");
 const request = require("../index.js");
 
 const url = "https://httpbin.org/get?foo=bar";
-const headers  = {
+const headers = {
     "Client": "request-service",
     "Answer": 42,
 };
@@ -16,7 +16,7 @@ request.get(url, headers,
 
 // noinspection DuplicatedCode
 function requestService_get_ready(err, data) {
-    init("Run get.test.js");
+    init("Test GET generic data");
 
     test("No errors", () => {
         assert.ok(!err);

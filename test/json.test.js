@@ -17,7 +17,7 @@ request.json(url, data, headers,
 
 // noinspection DuplicatedCode
 function requestService_post_ready(err, data) {
-    init("Run json.test.js");
+    init("Test POST json data");
 
     test("No errors", () => {
         assert.ok(!err);

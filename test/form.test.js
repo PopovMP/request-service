@@ -17,7 +17,7 @@ request.form(url, data, headers,
 
 // noinspection DuplicatedCode
 function requestService_post_ready(err, data) {
-    init("Run form.test.js");
+    init("Test POST form data");
 
     test("No errors", () => {
         assert.ok(!err);

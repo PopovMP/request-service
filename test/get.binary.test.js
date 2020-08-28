@@ -4,7 +4,7 @@ const assert = require("assert");
 const {init, test, ensure} = require("@popovmp/micro-tester");
 
 const request = require("../index.js");
-const headers  = {};
+const headers = {};
 
 const url = "https://datafeed.dukascopy.com/datafeed/EURUSD/2020/07/24/07h_ticks.bi5";
 
@@ -13,7 +13,7 @@ request.get(url, headers,
 
 // noinspection DuplicatedCode
 function requestService_get_ready(err, data) {
-    init("Run get-binary.test.js");
+    init("Test GET binary data");
 
     test("No errors", () => {
         assert.ok(!err);

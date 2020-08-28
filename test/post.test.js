@@ -18,7 +18,7 @@ request.post(url, data, headers,
 
 // noinspection DuplicatedCode
 function requestService_post_ready(err, data) {
-    init("Run post.test.js");
+    init("Test POST generic data");
 
     test("No errors", () => {
         assert.ok(!err);

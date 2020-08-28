@@ -5,7 +5,7 @@ const {init, test, ensure} = require("@popovmp/micro-tester");
 
 const request = require("../index.js");
 
-init("Test request-service");
+init("Test the Request Service API");
 
 test("It provides method `get`", () => {
     assert.strictEqual(typeof request.get, "function");
