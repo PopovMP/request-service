@@ -1,10 +1,10 @@
 # Make GET and POST requests with default headers and parse the response
 
-**request-service** sends GET and POST request with some automations:
-  - sets default Content-Type header depending on the data type
-  - sets the Content-Length header
-  - parses the received data depending on the incoming headers to JSON, Buffer, or string.
-  - provides the Request/Response properties in teh callback
+**request-service** sends `GET` and `POST` request with some automations:
+  - sets default `Content-Type` header depending on the data type
+  - sets the `Content-Length` header
+  - parses the received data depending on the incoming headers to `JSON`, `Buffer`, or a `string`.
+  - provides the Request / Response properties in the callback
 
 Homepage: https://github.com/popovmp/request-service#readme
 
@@ -96,7 +96,7 @@ for the **POST** requests depending on the `data` type.
 
 ```javascript
 // Request callback
-function request_ready(err, data, prop) { ... }
+function request_ready(err, data, prop) { }
 ```
 
 In case of an error, the callback receives the error message and the Request properties.
@@ -110,7 +110,7 @@ When there is no error, it is called with `null` and `data`. The `data` can be `
   - `Content-Type: application/x-www-form-urlencoded` => `queryString.parse( data.toString() )`
   - other => `data.toString()`
 
-The Request properties is an object with properties from the outgoing request and incomming reponse.
+The Request properties is an object with properties from the outgoing request and incoming response.
 
 An example of **Request properties**:
 
@@ -150,7 +150,7 @@ An example of **Request properties**:
  * @param {OutgoingHttpHeaders} headers
  * @param {ResponseCallback} callback
  */
-function get(url, headers, callback)
+function get(url, headers, callback) { }
 ````
 
 ```javascript
@@ -162,7 +162,7 @@ function get(url, headers, callback)
  * @param {OutgoingHttpHeaders} headers
  * @param {ResponseCallback} callback
  */
-function post(url, data, headers, callback)
+function post(url, data, headers, callback) { }
 ````
 
 ```javascript
@@ -174,7 +174,7 @@ function post(url, data, headers, callback)
  * @param { OutgoingHttpHeaders } headers
  * @param { ResponseCallback    } callback
  */
-function form(url, data, headers, callback)
+function form(url, data, headers, callback) { }
 ````
 
 ```javascript
@@ -187,7 +187,7 @@ function form(url, data, headers, callback)
  * @param { OutgoingHttpHeaders } headers
  * @param { ResponseCallback    } callback
  */
-function json(url, data, headers, callback)
+function json(url, data, headers, callback) { }
 ```
 
 Where:
@@ -200,7 +200,7 @@ Where:
  * @param { Buffer | Object | string | null } data
  * @param { RequestProperties } prop
  */
-function request_ready(err, data, prop)
+function request_ready(err, data, prop) { }
 ````
 
 ## License
