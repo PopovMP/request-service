@@ -1,7 +1,10 @@
 # Make GET and POST requests with default headers and parse the response
 
-**request-service** provides GET and POST request methods,
- sets default headers, and pareses the response.
+**request-service** sends GET and POST request with some automations:
+  - sets default Content-Type header depending on the data type
+  - sets the Content-Length header
+  - parses the received data depending on the incoming headers to JSON, Buffer, or string.
+  - provides the Request/Response properties in teh callback
 
 Homepage: https://github.com/popovmp/request-service#readme
 
@@ -11,7 +14,7 @@ Make a **GET** request
 
 ```javascript
 const url     = 'https://example.com/get?foo=bar';
-const headers = {'Username': 'John Dowe'};
+const headers = {'Username': 'John Doe'};
 
 requestService.get(url, headers,
     request_ready);
@@ -24,7 +27,7 @@ const requestService = require('@popovmp/request-service');
 
 const url     = 'https://example.com/post?foo=bar';
 const data    = {answer: 42}; // Can be anything
-const headers = {'Username': 'John Dowe'};
+const headers = {'Username': 'John Doe'};
 
 requestService.post(url, data, headers,
     request_ready);
@@ -36,7 +39,7 @@ requestService.post(url, data, headers,
 const requestService = require('@popovmp/request-service');
 
 const url     = 'https://example.com/form';
-const form    = {name: 'John Dowe', email: 'john@example.com'};
+const form    = {name: 'John Doe', email: 'john@example.com'};
 const headers = {};
 
 requestService.form(url, form, headers,
@@ -59,12 +62,14 @@ requestService.json(url, object, headers,
 The **request-service** accepts equal callback for both GET and POST requests.
 
 ```javascript
-function request_ready(err, data) {
+function request_ready(err, data, prop) {
     if (err) {
         console.error('Error: ' + err);
     }
 
     console.log(data);
+
+    console.log( JSON.stringify(prop, null, 2) );
 }
 ````
 
@@ -89,7 +94,12 @@ for the **POST** requests depending on the `data` type.
 
 **request-service** call the given callback when the request is ready.
 
-In case of an error, the callback brings `error.message` and `null`.
+```javascript
+// Request callback
+function request_ready(err, data, prop) { ... }
+```
+
+In case of an error, the callback receives the error message and the Request properties.
 
 When there is no error, it is called with `null` and `data`. The `data` can be `Buffer`, `Object`, `string` or `null`.
 
@@ -99,6 +109,34 @@ When there is no error, it is called with `null` and `data`. The `data` can be `
   - `Content-Type: application/json` => `JSON.parse( data.toString() )`
   - `Content-Type: application/x-www-form-urlencoded` => `queryString.parse( data.toString() )`
   - other => `data.toString()`
+
+The Request properties is an object with properties from the outgoing request and incomming reponse.
+
+An example of **Request properties**:
+
+```json
+{
+  "aborted": false,
+  "complete": true,
+  "headers": {
+    "date": "Sat, 29 Aug 2020 06:41:37 GMT",
+    "content-type": "application/json",
+    "content-length": "283",
+    "connection": "close",
+    "server": "gunicorn/19.9.0",
+    "access-control-allow-origin": "*",
+    "access-control-allow-credentials": "true"
+  },
+  "host": "httpbin.org",
+  "httpVersion": "1.1",
+  "method": "GET",
+  "outputSize": 0,
+  "path": "/get?foo=bar",
+  "protocol": "https:",
+  "statusCode": 200,
+  "statusMessage": "OK"
+}
+```
 
 ## Methods
 
@@ -110,7 +148,7 @@ When there is no error, it is called with `null` and `data`. The `data` can be `
  *
  * @param {string} url
  * @param {OutgoingHttpHeaders} headers
- * @param {ResponseCallback} callback callback(error, data)
+ * @param {ResponseCallback} callback
  */
 function get(url, headers, callback)
 ````
@@ -122,7 +160,7 @@ function get(url, headers, callback)
  * @param {string} url
  * @param {any} data
  * @param {OutgoingHttpHeaders} headers
- * @param {ResponseCallback} callback callback(error, data)
+ * @param {ResponseCallback} callback
  */
 function post(url, data, headers, callback)
 ````
@@ -134,7 +172,7 @@ function post(url, data, headers, callback)
  * @param { string              } url
  * @param { object              } data - values can be object, string, numbers or arrays.
  * @param { OutgoingHttpHeaders } headers
- * @param { ResponseCallback    } callback - optional callback(error, data)
+ * @param { ResponseCallback    } callback
  */
 function form(url, data, headers, callback)
 ````
@@ -147,7 +185,7 @@ function form(url, data, headers, callback)
  * @param { string              } url
  * @param { object              } data
  * @param { OutgoingHttpHeaders } headers
- * @param { ResponseCallback    } callback - optional callback(error, data)
+ * @param { ResponseCallback    } callback
  */
 function json(url, data, headers, callback)
 ```
@@ -160,8 +198,9 @@ Where:
  *
  * @param { null | string } error
  * @param { Buffer | Object | string | null } data
+ * @param { RequestProperties } prop
  */
-function request_ready(err, data)
+function request_ready(err, data, prop)
 ````
 
 ## License
