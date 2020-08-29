@@ -5,13 +5,13 @@ const {init, test, ensure} = require('@popovmp/micro-tester');
 
 const request = require('../index.js');
 
-const url = 'https://httpbin.org/post?foo=bar';
+const url     = 'https://httpbin.org/post?foo=bar';
+const data    = {'pi': 3.14};
 const headers = {
     'Client': 'request-service',
     'Answer': 42,
 };
 
-const data = {'pi': 3.14};
 
 request.post(url, data, headers,
     requestService_ready);

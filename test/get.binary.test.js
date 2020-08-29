@@ -4,11 +4,10 @@ const assert = require('assert');
 const {init, test, ensure} = require('@popovmp/micro-tester');
 
 const request = require('../index.js');
-const headers = {};
 
 const url = 'https://datafeed.dukascopy.com/datafeed/EURUSD/2020/07/24/07h_ticks.bi5';
 
-request.get(url, headers,
+request.get(url, {},
     requestService_ready);
 
 // noinspection DuplicatedCode

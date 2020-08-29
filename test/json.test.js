@@ -5,12 +5,11 @@ const {init, test, ensure} = require('@popovmp/micro-tester');
 
 const request = require('../index.js');
 
-const url = 'https://httpbin.org/post?foo=bar';
+const url     = 'https://httpbin.org/post?foo=bar';
+const data    = {number: 42, text: 'foo', list: [1, 1, 2, 3, 5, 8, 12], object: {bar: 'baz'}};
 const headers = {
     'Client': 'request-service',
 };
-
-const data = {number: 42, text: 'foo', list: [1, 1, 2, 3, 5, 8, 12], object: {bar: 'baz'}};
 
 request.json(url, data, headers,
     requestService_ready);

@@ -5,7 +5,7 @@ const {init, test, ensure} = require('@popovmp/micro-tester');
 
 const request = require('../index.js');
 
-const url = 'https://httpbin.org/get?foo=bar';
+const url     = 'https://httpbin.org/get?foo=bar';
 const headers = {
     'Client': 'request-service',
     'Answer': 42,

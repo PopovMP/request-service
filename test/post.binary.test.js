@@ -6,11 +6,9 @@ const {init, test, ensure} = require('@popovmp/micro-tester');
 const request = require('../index.js');
 
 const url = 'https://httpbin.org/post?foo=bar';
-const headers = {};
-
 const data = Buffer.from('foo');
 
-request.post(url, data, headers,
+request.post(url, data, {},
     requestService_ready);
 
 // noinspection DuplicatedCode

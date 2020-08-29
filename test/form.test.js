@@ -5,14 +5,13 @@ const {init, test, ensure} = require('@popovmp/micro-tester');
 
 const request = require('../index.js');
 
-const url = 'https://httpbin.org/post?foo=bar';
+const url     = 'https://httpbin.org/post?foo=bar';
+const form    = {number: 42, text: 'foo', list: [1, 1, 2, 3, 5, 8, 12]};
 const headers = {
     'Client': 'request-service',
 };
 
-const data = {number: 42, text: 'foo', list: [1, 1, 2, 3, 5, 8, 12]};
-
-request.form(url, data, headers,
+request.form(url, form, headers,
     requestService_ready);
 
 // noinspection DuplicatedCode
