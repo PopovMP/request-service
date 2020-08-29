@@ -1,11 +1,11 @@
 'use strict';
 
-const assert = require('assert');
-const {init, test, ensure} = require('@popovmp/micro-tester');
+const {ok, strictEqual} = require('assert');
+const {describe, it} = require('@popovmp/mocha-tiny');
 
 const request = require('../index.js');
 
-const url = 'https://httpbin.org/post?foo=bar';
+const url  = 'https://httpbin.org/post?foo=bar';
 const data = Buffer.from('foo');
 
 request.post(url, data, {},
@@ -20,28 +20,27 @@ request.post(url, data, {},
  * @param { RequestProperties } [prop]
  */
 function requestService_ready(err, data, prop) {
-    init('Test POST binary data');
+    describe('Test POST binary data', () => {
 
-    test('No errors', () => {
-        assert.ok(!err);
+        it('No errors', () => {
+            ok(!err);
+        });
+
+        it('Status code 200', () => {
+            strictEqual(prop.statusCode, 200);
+        });
+
+        it('Status message "OK"', () => {
+            strictEqual(prop.statusMessage, "OK");
+        });
+
+        it('Response received', () => {
+            ok(data);
+        });
+
+        it('Correct data', () => {
+            // noinspection JSUnresolvedVariable
+            strictEqual(data.data, 'foo');
+        });
     });
-
-    test('Status code 200', () => {
-        assert.strictEqual(prop.statusCode, 200);
-    });
-
-    test('Status message "OK"', () => {
-        assert.strictEqual(prop.statusMessage, "OK");
-    });
-
-    test('Response received', () => {
-        assert.ok(data);
-    });
-
-    test('Correct data', () => {
-        // noinspection JSUnresolvedVariable
-        assert.strictEqual(data.data, 'foo');
-    });
-
-    ensure();
 }

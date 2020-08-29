@@ -1,7 +1,7 @@
 'use strict';
 
-const assert = require('assert');
-const {init, test, ensure} = require('@popovmp/micro-tester');
+const {ok, strictEqual} = require('assert');
+const {describe, it} = require('@popovmp/mocha-tiny');
 
 const request = require('../index.js');
 
@@ -23,38 +23,37 @@ request.get(url, headers,
  * @param { RequestProperties } [prop]
  */
 function requestService_ready(err, data, prop) {
-    init('Test GET generic data');
+    describe('Test GET generic data', () => {
 
-    test('No errors', () => {
-        assert.ok(!err);
+        it('No errors', () => {
+            ok(!err);
+        });
+
+        it('Response received', () => {
+            ok(data);
+        });
+
+        it('Status code 200', () => {
+            strictEqual(prop.statusCode, 200);
+        });
+
+        it('Status message "OK"', () => {
+            strictEqual(prop.statusMessage, "OK");
+        });
+
+        it('Correct query', () => {
+            // noinspection JSUnresolvedVariable
+            strictEqual(data.args.foo, 'bar');
+        });
+
+        it('Correct string header', () => {
+            // noinspection JSUnresolvedVariable
+            strictEqual(data.headers.Client, 'request-service');
+        });
+
+        it('Correct numeric header', () => {
+            // noinspection JSUnresolvedVariable
+            strictEqual(data.headers.Answer, '42');
+        });
     });
-
-    test('Response received', () => {
-        assert.ok(data);
-    });
-
-    test('Status code 200', () => {
-        assert.strictEqual(prop.statusCode, 200);
-    });
-
-    test('Status message "OK"', () => {
-        assert.strictEqual(prop.statusMessage, "OK");
-    });
-
-    test('Correct query', () => {
-        // noinspection JSUnresolvedVariable
-        assert.strictEqual(data.args.foo, 'bar');
-    });
-
-    test('Correct string header', () => {
-        // noinspection JSUnresolvedVariable
-        assert.strictEqual(data.headers.Client, 'request-service');
-    });
-
-    test('Correct numeric header', () => {
-        // noinspection JSUnresolvedVariable
-        assert.strictEqual(data.headers.Answer, '42');
-    });
-
-    ensure();
 }

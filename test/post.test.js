@@ -1,22 +1,18 @@
 'use strict';
 
-const assert = require('assert');
-const {init, test, ensure} = require('@popovmp/micro-tester');
+const {ok, strictEqual} = require('assert');
+const {describe, it} = require('@popovmp/mocha-tiny');
 
 const request = require('../index.js');
 
 const url     = 'https://httpbin.org/post?foo=bar';
 const data    = {'pi': 3.14};
-const headers = {
-    'Client': 'request-service',
-    'Answer': 42,
-};
+const headers = {'Client': 'request-service', 'Answer': 42};
 
 
 request.post(url, data, headers,
-    requestService_ready);
+    request_post_ready);
 
-// noinspection DuplicatedCode
 /**
  * @type { ResponseCallback }
  *
@@ -24,44 +20,43 @@ request.post(url, data, headers,
  * @param { Buffer | Object | string | null } data
  * @param { RequestProperties } [prop]
  */
-function requestService_ready(err, data, prop) {
-    init('Test POST generic data');
+function request_post_ready(err, data, prop) {
+    describe('Test POST generic data', () => {
 
-    test('No errors', () => {
-        assert.ok(!err);
+        it('No errors', () => {
+            ok(!err);
+        });
+    
+        it('Status code 200', () => {
+            strictEqual(prop.statusCode, 200);
+        });
+    
+        it('Status message "OK"', () => {
+            strictEqual(prop.statusMessage, "OK");
+        });
+    
+        it('Response received', () => {
+            ok(data);
+        });
+    
+        it('Correct query', () => {
+            // noinspection JSUnresolvedVariable
+            strictEqual(data.args.foo, 'bar');
+        });
+    
+        it('Correct string header', () => {
+            // noinspection JSUnresolvedVariable
+            strictEqual(data.headers.Client, 'request-service');
+        });
+    
+        it('Correct numeric header', () => {
+            // noinspection JSUnresolvedVariable
+            strictEqual(data.headers.Answer, '42');
+        });
+    
+        it('Correct data', () => {
+            // noinspection JSUnresolvedVariable
+            strictEqual(data.json.pi, 3.14);
+        });
     });
-
-    test('Status code 200', () => {
-        assert.strictEqual(prop.statusCode, 200);
-    });
-
-    test('Status message "OK"', () => {
-        assert.strictEqual(prop.statusMessage, "OK");
-    });
-
-    test('Response received', () => {
-        assert.ok(data);
-    });
-
-    test('Correct query', () => {
-        // noinspection JSUnresolvedVariable
-        assert.strictEqual(data.args.foo, 'bar');
-    });
-
-    test('Correct string header', () => {
-        // noinspection JSUnresolvedVariable
-        assert.strictEqual(data.headers.Client, 'request-service');
-    });
-
-    test('Correct numeric header', () => {
-        // noinspection JSUnresolvedVariable
-        assert.strictEqual(data.headers.Answer, '42');
-    });
-
-    test('Correct data', () => {
-        // noinspection JSUnresolvedVariable
-        assert.strictEqual(data.json.pi, 3.14);
-    });
-
-    ensure();
 }

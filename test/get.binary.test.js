@@ -1,16 +1,15 @@
 'use strict';
 
-const assert = require('assert');
-const {init, test, ensure} = require('@popovmp/micro-tester');
+const {ok, strictEqual} = require('assert');
+const {describe, it} = require('@popovmp/mocha-tiny');
 
 const request = require('../index.js');
 
 const url = 'https://datafeed.dukascopy.com/datafeed/EURUSD/2020/07/24/07h_ticks.bi5';
 
 request.get(url, {},
-    requestService_ready);
+    request_get_ready);
 
-// noinspection DuplicatedCode
 /**
  * @type { ResponseCallback }
  *
@@ -18,33 +17,32 @@ request.get(url, {},
  * @param { Buffer | Object | string | null } data
  * @param { RequestProperties } [prop]
  */
-function requestService_ready(err, data, prop) {
-    init('Test GET binary data');
+function request_get_ready(err, data, prop) {
+    describe('Test GET binary data', () => {
 
-    test('No errors', () => {
-        assert.ok(!err);
+        it('No errors', () => {
+            ok(!err);
+        });
+
+        it('Response received', () => {
+            ok(data);
+        });
+
+        it('Status code 200', () => {
+            strictEqual(prop.statusCode, 200);
+        });
+
+        it('Status message "OK"', () => {
+            strictEqual(prop.statusMessage, 'OK');
+        });
+
+        it('Received data is Buffer', () => {
+            ok(Buffer.isBuffer(data));
+        });
+
+        it('Equal data length and Content-Length', () => {
+            const contentLength = parseInt(prop.headers['content-length']);
+            strictEqual(data.length, contentLength);
+        });
     });
-
-    test('Response received', () => {
-        assert.ok(data);
-    });
-
-    test('Status code 200', () => {
-        assert.strictEqual(prop.statusCode, 200);
-    });
-
-    test('Status message "OK"', () => {
-        assert.strictEqual(prop.statusMessage, "OK");
-    });
-
-    test('Received data is Buffer', () => {
-        assert.ok(Buffer.isBuffer(data));
-    });
-
-    test('Equal data length and Content-Length', () => {
-        const contentLength = parseInt( prop.headers['content-length'] );
-        assert.strictEqual(data.length, contentLength);
-    });
-
-    ensure();
 }

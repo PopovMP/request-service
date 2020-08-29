@@ -1,12 +1,12 @@
 'use strict';
 
-const assert = require('assert');
-const {init, test, ensure} = require('@popovmp/micro-tester');
+const {ok, strictEqual} = require('assert');
+const {describe, it} = require('@popovmp/mocha-tiny');
 
 const request = require('../index.js');
 
 request.head('https://httpbin.org', {},
-    requestService_ready);
+    request_head_ready);
 
 /**
  * @type { ResponseCallback }
@@ -15,24 +15,23 @@ request.head('https://httpbin.org', {},
  * @param { Buffer | Object | string | null } data
  * @param { RequestProperties } [prop]
  */
-function requestService_ready(err, data, prop) {
-    init('Test HEAD request');
+function request_head_ready(err, data, prop) {
+    describe('Test HEAD request', () => {
 
-    test('No errors', () => {
-        assert.ok(!err);
+        it('No errors', () => {
+            ok(!err);
+        });
+
+        it('No data', () => {
+            ok(!data);
+        });
+
+        it('Status code 200', () => {
+            strictEqual(prop.statusCode, 200);
+        });
+
+        it('Status message "OK"', () => {
+            strictEqual(prop.statusMessage, "OK");
+        });
     });
-
-    test('No data', () => {
-        assert.ok(!data);
-    });
-
-    test('Status code 200', () => {
-        assert.strictEqual(prop.statusCode, 200);
-    });
-
-    test('Status message "OK"', () => {
-        assert.strictEqual(prop.statusMessage, "OK");
-    });
-
-    ensure();
 }
