@@ -1,14 +1,31 @@
 'use strict';
 
-const http = require('http');
+const http  = require('http');
 const https = require('https');
 const queryString = require('querystring');
 
 /**
  * @typedef { function } ResponseCallback
  *
- * @param { null | string } error
- * @param { Buffer | Object | string | null } data
+ * @param { null | string             } error
+ * @param { Buffer|Object|string|null } data
+ * @param { RequestProperties         } [prop]
+ */
+
+/**
+ * @typedef { object } RequestProperties
+ *
+ * @property { boolean | undefined } aborted
+ * @property { boolean | undefined } complete
+ * @property { Object              } headers
+ * @property { string              } host
+ * @property { string  | undefined } httpVersion
+ * @property { string              } method
+ * @property { number              } outputSize
+ * @property { string              } path
+ * @property { string              } protocol
+ * @property { number  | undefined } statusCode
+ * @property { string  | undefined } statusMessage
  */
 
 /**
@@ -27,7 +44,7 @@ const queryString = require('querystring');
  *
  * @param { string              } url
  * @param { OutgoingHttpHeaders } headers
- * @param { ResponseCallback    } callback - callback(error, data)
+ * @param { ResponseCallback    } callback
  */
 function head(url, headers, callback) {
     const options = makeReqOptions(url, headers, 'HEAD');
@@ -40,7 +57,7 @@ function head(url, headers, callback) {
  *
  * @param { string              } url
  * @param { OutgoingHttpHeaders } headers
- * @param { ResponseCallback    } callback - callback(error, data)
+ * @param { ResponseCallback    } callback
  */
 function get(url, headers, callback) {
     const options = makeReqOptions(url, headers, 'GET');
@@ -54,7 +71,7 @@ function get(url, headers, callback) {
  * @param { string              } url
  * @param { any                 } data
  * @param { OutgoingHttpHeaders } headers
- * @param { ResponseCallback    } callback - optional callback(error, data)
+ * @param { ResponseCallback    } callback
  */
 function post(url, data, headers, callback) {
     const options = makeReqOptions(url, headers, 'POST');
@@ -82,11 +99,12 @@ function post(url, data, headers, callback) {
  * @param { string              } url
  * @param { object              } data - values can be object, string, numbers or arrays.
  * @param { OutgoingHttpHeaders } headers
- * @param { ResponseCallback    } callback - optional callback(error, data)
+ * @param { ResponseCallback    } callback
  */
 function form(url, data, headers, callback) {
     const options = makeReqOptions(url, headers, 'POST');
     const postForm = queryString.stringify(data);
+
     sendPost(options, postForm, 'application/x-www-form-urlencoded', callback);
 }
 
@@ -96,11 +114,12 @@ function form(url, data, headers, callback) {
  * @param { string              } url
  * @param { object              } data
  * @param { OutgoingHttpHeaders } headers
- * @param { ResponseCallback    } callback - optional callback(error, data)
+ * @param { ResponseCallback    } callback
  */
 function json(url, data, headers, callback) {
     const options = makeReqOptions(url, headers, 'POST');
     const postText = JSON.stringify(data);
+
     sendPost(options, postText, 'application/json', callback);
 }
 
@@ -118,10 +137,10 @@ function makeReqOptions(url, headers, method) {
     const urlObj = new URL(url);
 
     return {
-        hostname: urlObj.hostname,
-        path: urlObj.pathname + urlObj.search,
-        port: urlObj.port || (urlObj.protocol === 'https:' ? 443 : 80),
-        protocol: urlObj.protocol,
+        hostname : urlObj.hostname,
+        path     : urlObj.pathname + urlObj.search,
+        port     : urlObj.port || (urlObj.protocol === 'https:' ? 443 : 80),
+        protocol : urlObj.protocol,
         headers,
         method,
     };
@@ -163,7 +182,7 @@ function sendRequest(options, postData, callback) {
         reqCallback);
 
     req.on('error', (err) => {
-        callback(err.message, null);
+        callback(err.message, null, getRequestProperties(this));
     });
 
     if (postData) {
@@ -177,26 +196,29 @@ function sendRequest(options, postData, callback) {
      */
     function reqCallback(res) {
         /** @type { Buffer[] }*/
-        const data = [];
+        const chunks = [];
 
         res.on('data', (chunk) => {
-            data.push(chunk);
+            chunks.push(chunk);
         });
 
         res.on('end', () => {
             /** @type { Buffer | Object | string | null } */
-            let resData = null;
+            let body = null;
 
             /** @type { string | null } */
             let err = null;
 
             try {
-                resData = parseResData(Buffer.concat(data), res.headers['content-type']);
+                body = parseBody(Buffer.concat(chunks), res.headers['content-type']);
             } catch (e) {
                 err = e.message;
             }
 
-            callback(err, resData);
+            /** @type { RequestProperties } */
+            const prop = getRequestProperties(this, res);
+
+            callback(err, body, prop);
         });
     }
 
@@ -208,7 +230,7 @@ function sendRequest(options, postData, callback) {
      *
      * @return { Buffer | Object | string }
      */
-    function parseResData(buffer, contentType) {
+    function parseBody(buffer, contentType) {
         if (contentType.includes('octet-stream')) {
             return buffer;
         }
@@ -222,6 +244,32 @@ function sendRequest(options, postData, callback) {
         }
 
         return buffer.toString();
+    }
+
+    /**
+     * Copies the response properties
+     *
+     * @param { ClientRequest   } req
+     * @param { IncomingMessage } [res]
+     *
+     * @return { RequestProperties }
+     */
+    function getRequestProperties(req, res) {
+
+        // noinspection JSUnresolvedVariable
+        return {
+            aborted       : res?.aborted,
+            complete      : res?.complete,
+            headers       : { ...res?.headers },
+            host          : req.host,
+            httpVersion   : res?.httpVersion,
+            method        : req.method,
+            outputSize    : req.outputSize,
+            path          : req.path,
+            protocol      : req.protocol,
+            statusCode    : res?.statusCode,
+            statusMessage : res?.statusMessage,
+        };
     }
 }
 

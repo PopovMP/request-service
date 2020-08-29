@@ -12,10 +12,17 @@ const headers = {
 };
 
 request.get(url, headers,
-    requestService_get_ready);
+    requestService_ready);
 
 // noinspection DuplicatedCode
-function requestService_get_ready(err, data) {
+/**
+ * @type { ResponseCallback }
+ *
+ * @param { null | string } err
+ * @param { Buffer | Object | string | null } data
+ * @param { RequestProperties } [prop]
+ */
+function requestService_ready(err, data, prop) {
     init('Test GET generic data');
 
     test('No errors', () => {
@@ -26,15 +33,26 @@ function requestService_get_ready(err, data) {
         assert.ok(data);
     });
 
+    test('Status code 200', () => {
+        assert.strictEqual(prop.statusCode, 200);
+    });
+
+    test('Status message "OK"', () => {
+        assert.strictEqual(prop.statusMessage, "OK");
+    });
+
     test('Correct query', () => {
+        // noinspection JSUnresolvedVariable
         assert.strictEqual(data.args.foo, 'bar');
     });
 
     test('Correct string header', () => {
+        // noinspection JSUnresolvedVariable
         assert.strictEqual(data.headers.Client, 'request-service');
     });
 
     test('Correct numeric header', () => {
+        // noinspection JSUnresolvedVariable
         assert.strictEqual(data.headers.Answer, '42');
     });
 

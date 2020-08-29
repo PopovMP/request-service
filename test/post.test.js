@@ -14,14 +14,29 @@ const headers = {
 const data = {'pi': 3.14};
 
 request.post(url, data, headers,
-    requestService_post_ready);
+    requestService_ready);
 
 // noinspection DuplicatedCode
-function requestService_post_ready(err, data) {
+/**
+ * @type { ResponseCallback }
+ *
+ * @param { null | string } err
+ * @param { Buffer | Object | string | null } data
+ * @param { RequestProperties } [prop]
+ */
+function requestService_ready(err, data, prop) {
     init('Test POST generic data');
 
     test('No errors', () => {
         assert.ok(!err);
+    });
+
+    test('Status code 200', () => {
+        assert.strictEqual(prop.statusCode, 200);
+    });
+
+    test('Status message "OK"', () => {
+        assert.strictEqual(prop.statusMessage, "OK");
     });
 
     test('Response received', () => {
@@ -29,18 +44,22 @@ function requestService_post_ready(err, data) {
     });
 
     test('Correct query', () => {
+        // noinspection JSUnresolvedVariable
         assert.strictEqual(data.args.foo, 'bar');
     });
 
     test('Correct string header', () => {
+        // noinspection JSUnresolvedVariable
         assert.strictEqual(data.headers.Client, 'request-service');
     });
 
     test('Correct numeric header', () => {
+        // noinspection JSUnresolvedVariable
         assert.strictEqual(data.headers.Answer, '42');
     });
 
     test('Correct data', () => {
+        // noinspection JSUnresolvedVariable
         assert.strictEqual(data.json.pi, 3.14);
     });
 

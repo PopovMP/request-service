@@ -11,14 +11,29 @@ const headers = {};
 const data = Buffer.from('foo');
 
 request.post(url, data, headers,
-    requestService_post_ready);
+    requestService_ready);
 
 // noinspection DuplicatedCode
-function requestService_post_ready(err, data) {
+/**
+ * @type { ResponseCallback }
+ *
+ * @param { null | string } err
+ * @param { Buffer | Object | string | null } data
+ * @param { RequestProperties } [prop]
+ */
+function requestService_ready(err, data, prop) {
     init('Test POST binary data');
 
     test('No errors', () => {
         assert.ok(!err);
+    });
+
+    test('Status code 200', () => {
+        assert.strictEqual(prop.statusCode, 200);
+    });
+
+    test('Status message "OK"', () => {
+        assert.strictEqual(prop.statusMessage, "OK");
     });
 
     test('Response received', () => {
@@ -26,6 +41,7 @@ function requestService_post_ready(err, data) {
     });
 
     test('Correct data', () => {
+        // noinspection JSUnresolvedVariable
         assert.strictEqual(data.data, 'foo');
     });
 
