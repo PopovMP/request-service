@@ -166,6 +166,7 @@ function sendPost(options, data, contentType, callback) {
     sendRequest(options, data, callback);
 }
 
+// noinspection JSCheckFunctionSignatures
 /**
  * Sends a request
  *
@@ -182,7 +183,10 @@ function sendRequest(options, postData, callback) {
         reqCallback);
 
     req.on('error', (err) => {
-        callback(err.message, null, getRequestProperties(this));
+        // noinspection JSCheckFunctionSignatures
+        /** @type { RequestProperties } */
+        const prop = getRequestProperties(req);
+        callback(err.message, null, prop);
     });
 
     if (postData) {
