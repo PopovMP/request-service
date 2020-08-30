@@ -1,6 +1,6 @@
-# Make GET and POST requests with default headers and parse the response
+# Make HEAD, GET, and POST requests with default headers and parse the response
 
-**request-service** sends `GET` and `POST` request with some automations:
+**request-service** sends `GET`, `POST`, and `HEAD` request with some automations:
   - sets default `Content-Type` header depending on the data type
   - sets the `Content-Length` header
   - parses the received data depending on the incoming headers to `JSON`, `Buffer`, or a `string`.
@@ -10,52 +10,58 @@ Homepage: https://github.com/popovmp/request-service#readme
 
 ## Synopsis
 
+Make a **HEAD** request
+
+```javascript
+const request = require('@popovmp/request-service');
+
+request.head('https://example.com', {}, (err, data, prop) => {
+    console.log( prop.statusCode === 200
+        ? 'The server is online!'
+        : 'The server is down...' );
+});
+```
+
 Make a **GET** request
 
 ```javascript
 const url     = 'https://example.com/get?foo=bar';
 const headers = {'Username': 'John Doe'};
 
-requestService.get(url, headers,
+request.get(url, headers,
     request_ready);
 ```
 
 Make a **POST** request
 
 ```javascript
-const requestService = require('@popovmp/request-service');
-
 const url     = 'https://example.com/post?foo=bar';
 const data    = {answer: 42}; // Can be anything
 const headers = {'Username': 'John Doe'};
 
-requestService.post(url, data, headers,
+request.post(url, data, headers,
     request_ready);
 ```
 
 **POST form** request with a `Content-Type: x-www-form-urlencoded` header
 
 ```javascript
-const requestService = require('@popovmp/request-service');
-
 const url     = 'https://example.com/form';
 const form    = {name: 'John Doe', email: 'john@example.com'};
 const headers = {};
 
-requestService.form(url, form, headers,
+request.form(url, form, headers,
     request_ready);
 ```
 
 **POST json** request with a `Content-Type: application/json` header
 
 ```javascript
-const requestService = require('@popovmp/request-service');
-
 const url     = 'https://example.com/api';
 const object  = {answer: 42, numbers: [1, 2, 3, 4]};
 const headers = {};
 
-requestService.json(url, object, headers,
+request.json(url, object, headers,
     request_ready);
 ```
 
@@ -140,7 +146,18 @@ An example of **Request properties**:
 
 ## Methods
 
-**request-service** exports two methods:
+**request-service** exports the following methods: `head`, `get`, `post`, `form`, and `json`.
+
+```javascript
+/**
+ * Sends a HEAD request.
+ *
+ * @param { string              } url
+ * @param { OutgoingHttpHeaders } headers
+ * @param { ResponseCallback    } callback
+ */
+function head(url, headers, callback) { }
+```
 
 ```javascript
 /**

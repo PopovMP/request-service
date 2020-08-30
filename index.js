@@ -40,7 +40,7 @@ const queryString = require('querystring');
  */
 
 /**
- * Sends a GET request.
+ * Sends a HEAD request.
  *
  * @param { string              } url
  * @param { OutgoingHttpHeaders } headers
