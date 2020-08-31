@@ -12,7 +12,6 @@ const headers = {Client: 'request-service'};
 request.form(url, form, headers,
     requestService_ready);
 
-// noinspection DuplicatedCode
 /**
  * @type { ResponseCallback }
  *
@@ -21,47 +20,51 @@ request.form(url, form, headers,
  * @param { RequestProperties } [prop]
  */
 function requestService_ready(err, data, prop) {
+
     describe('Test POST form data', () => {
 
-        it('No errors', () => {
-            ok(!err);
-        });
+        describe('form(url, form, headers, callback)', () => {
 
-        it('Response received', () => {
-            ok(data);
-        });
+            it('No errors', () => {
+                ok(!err);
+            });
 
-        it('Status code 200', () => {
-            strictEqual(prop.statusCode, 200);
-        });
+            it('Response received', () => {
+                ok(data);
+            });
 
-        it('Status message "OK"', () => {
-            strictEqual(prop.statusMessage, 'OK');
-        });
+            it('Status code 200', () => {
+                strictEqual(prop.statusCode, 200);
+            });
 
-        it('Correct query', () => {
-            // noinspection JSUnresolvedVariable
-            strictEqual(data.args.foo, 'bar');
-        });
+            it('Status message "OK"', () => {
+                strictEqual(prop.statusMessage, 'OK');
+            });
 
-        it('Correct header', () => {
-            // noinspection JSUnresolvedVariable
-            strictEqual(data.headers.Client, 'request-service');
-        });
+            it('Correct query', () => {
+                // noinspection JSUnresolvedVariable
+                strictEqual(data.args.foo, 'bar');
+            });
 
-        it('Correct data - number (as string)', () => {
-            // noinspection JSUnresolvedVariable
-            strictEqual(data.form.number, '42');
-        });
+            it('Correct header', () => {
+                // noinspection JSUnresolvedVariable
+                strictEqual(data.headers.Client, 'request-service');
+            });
 
-        it('Correct data - text', () => {
-            // noinspection JSUnresolvedVariable
-            strictEqual(data.form.text, 'foo');
-        });
+            it('Correct data - number (as string)', () => {
+                // noinspection JSUnresolvedVariable
+                strictEqual(data.form.number, '42');
+            });
 
-        it('Correct data - list', () => {
-            // noinspection JSUnresolvedVariable
-            deepStrictEqual(data.form.list, ['1', '1', '2', '3', '5', '8', '12']);
+            it('Correct data - text', () => {
+                // noinspection JSUnresolvedVariable
+                strictEqual(data.form.text, 'foo');
+            });
+
+            it('Correct data - list', () => {
+                // noinspection JSUnresolvedVariable
+                deepStrictEqual(data.form.list, ['1', '1', '2', '3', '5', '8', '12']);
+            });
         });
     });
 }

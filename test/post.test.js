@@ -23,40 +23,42 @@ request.post(url, data, headers,
 function request_post_ready(err, data, prop) {
     describe('Test POST generic data', () => {
 
-        it('No errors', () => {
-            ok(!err);
-        });
-    
-        it('Status code 200', () => {
-            strictEqual(prop.statusCode, 200);
-        });
-    
-        it('Status message "OK"', () => {
-            strictEqual(prop.statusMessage, "OK");
-        });
-    
-        it('Response received', () => {
-            ok(data);
-        });
-    
-        it('Correct query', () => {
-            // noinspection JSUnresolvedVariable
-            strictEqual(data.args.foo, 'bar');
-        });
-    
-        it('Correct string header', () => {
-            // noinspection JSUnresolvedVariable
-            strictEqual(data.headers.Client, 'request-service');
-        });
-    
-        it('Correct numeric header', () => {
-            // noinspection JSUnresolvedVariable
-            strictEqual(data.headers.Answer, '42');
-        });
-    
-        it('Correct data', () => {
-            // noinspection JSUnresolvedVariable
-            strictEqual(data.json.pi, 3.14);
+        describe('post(url, data, headers, callback)', () => {
+            it('No errors', () => {
+                ok(!err);
+            });
+
+            it('Status code 200', () => {
+                strictEqual(prop.statusCode, 200);
+            });
+
+            it('Status message "OK"', () => {
+                strictEqual(prop.statusMessage, "OK");
+            });
+
+            it('Response received', () => {
+                ok(data);
+            });
+
+            it('Correct query', () => {
+                // noinspection JSUnresolvedVariable
+                strictEqual(data.args.foo, 'bar');
+            });
+
+            it('Correct string header', () => {
+                // noinspection JSUnresolvedVariable
+                strictEqual(data.headers.Client, 'request-service');
+            });
+
+            it('Correct numeric header', () => {
+                // noinspection JSUnresolvedVariable
+                strictEqual(data.headers.Answer, '42');
+            });
+
+            it('Correct data', () => {
+                // noinspection JSUnresolvedVariable
+                strictEqual(data.json.pi, 3.14);
+            });
         });
     });
 }

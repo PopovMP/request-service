@@ -6,9 +6,9 @@ const {describe, it} = require('@popovmp/mocha-tiny');
 const request = require('../index.js');
 
 const url  = 'https://httpbin.org/post?foo=bar';
-const data = Buffer.from('foo');
+const buffer = Buffer.from('foo');
 
-request.post(url, data, {},
+request.post(url, buffer, {},
     requestService_ready);
 
 // noinspection DuplicatedCode
@@ -22,25 +22,28 @@ request.post(url, data, {},
 function requestService_ready(err, data, prop) {
     describe('Test POST binary data', () => {
 
-        it('No errors', () => {
-            ok(!err);
-        });
+        describe('post(url, buffer, headers, callback)', () => {
 
-        it('Status code 200', () => {
-            strictEqual(prop.statusCode, 200);
-        });
+            it('No errors', () => {
+                ok(!err);
+            });
 
-        it('Status message "OK"', () => {
-            strictEqual(prop.statusMessage, "OK");
-        });
+            it('Status code 200', () => {
+                strictEqual(prop.statusCode, 200);
+            });
 
-        it('Response received', () => {
-            ok(data);
-        });
+            it('Status message "OK"', () => {
+                strictEqual(prop.statusMessage, "OK");
+            });
 
-        it('Correct data', () => {
-            // noinspection JSUnresolvedVariable
-            strictEqual(data.data, 'foo');
+            it('Response received', () => {
+                ok(data);
+            });
+
+            it('Correct data', () => {
+                // noinspection JSUnresolvedVariable
+                strictEqual(data.data, 'foo');
+            });
         });
     });
 }

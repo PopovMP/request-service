@@ -16,22 +16,26 @@ request.head('https://httpbin.org', {},
  * @param { RequestProperties } [prop]
  */
 function request_head_ready(err, data, prop) {
+
     describe('Test HEAD request', () => {
 
-        it('No errors', () => {
-            ok(!err);
-        });
+        describe('head(url, headers, callback)', () => {
 
-        it('No data', () => {
-            ok(!data);
-        });
+            it('No errors', () => {
+                ok(!err);
+            });
 
-        it('Status code 200', () => {
-            strictEqual(prop.statusCode, 200);
-        });
+            it('No data', () => {
+                ok(!data);
+            });
 
-        it('Status message "OK"', () => {
-            strictEqual(prop.statusMessage, "OK");
+            it('Status code 200', () => {
+                strictEqual(prop.statusCode, 200);
+            });
+
+            it('Status message "OK"', () => {
+                strictEqual(prop.statusMessage, "OK");
+            });
         });
     });
 }

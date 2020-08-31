@@ -20,29 +20,32 @@ request.get(url, {},
 function request_get_ready(err, data, prop) {
     describe('Test GET binary data', () => {
 
-        it('No errors', () => {
-            ok(!err);
-        });
+        describe('get(url, headers, callback)', () => {
 
-        it('Response received', () => {
-            ok(data);
-        });
+            it('No errors', () => {
+                ok(!err);
+            });
 
-        it('Status code 200', () => {
-            strictEqual(prop.statusCode, 200);
-        });
+            it('Response received', () => {
+                ok(data);
+            });
 
-        it('Status message "OK"', () => {
-            strictEqual(prop.statusMessage, 'OK');
-        });
+            it('Status code 200', () => {
+                strictEqual(prop.statusCode, 200);
+            });
 
-        it('Received data is Buffer', () => {
-            ok(Buffer.isBuffer(data));
-        });
+            it('Status message "OK"', () => {
+                strictEqual(prop.statusMessage, 'OK');
+            });
 
-        it('Equal data length and Content-Length', () => {
-            const contentLength = parseInt(prop.headers['content-length']);
-            strictEqual(data.length, contentLength);
+            it('Received data is Buffer', () => {
+                ok(Buffer.isBuffer(data));
+            });
+
+            it('Equal data length and Content-Length', () => {
+                const contentLength = parseInt(prop.headers['content-length']);
+                strictEqual(data.length, contentLength);
+            });
         });
     });
 }
