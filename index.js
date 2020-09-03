@@ -47,7 +47,14 @@ const queryString = require('querystring');
  * @param { ResponseCallback    } callback
  */
 function head(url, headers, callback) {
-    const options = makeReqOptions(url, headers, 'HEAD');
+    let options;
+
+    try {
+        options = makeReqOptions(url, headers, 'HEAD');
+    } catch (e) {
+        callback(e.message, null, getRequestProperties());
+        return;
+    }
 
     sendRequest(options, null, callback);
 }
@@ -60,7 +67,14 @@ function head(url, headers, callback) {
  * @param { ResponseCallback    } callback
  */
 function get(url, headers, callback) {
-    const options = makeReqOptions(url, headers, 'GET');
+    let options;
+
+    try {
+        options = makeReqOptions(url, headers, 'GET');
+    } catch (e) {
+        callback(e.message, null, getRequestProperties());
+        return;
+    }
 
     sendRequest(options, null, callback);
 }
@@ -74,7 +88,14 @@ function get(url, headers, callback) {
  * @param { ResponseCallback    } callback
  */
 function post(url, data, headers, callback) {
-    const options = makeReqOptions(url, headers, 'POST');
+    let options;
+
+    try {
+        options = makeReqOptions(url, headers, 'POST');
+    } catch (e) {
+        callback(e.message, null, getRequestProperties());
+        return;
+    }
 
     if (data === null || data === undefined) {
         sendPost(options, null, '', callback);
@@ -102,7 +123,15 @@ function post(url, data, headers, callback) {
  * @param { ResponseCallback    } callback
  */
 function form(url, data, headers, callback) {
-    const options = makeReqOptions(url, headers, 'POST');
+    let options;
+
+    try {
+        options = makeReqOptions(url, headers, 'POST');
+    } catch (e) {
+        callback(e.message, null, getRequestProperties());
+        return;
+    }
+
     const postForm = queryString.stringify(data);
 
     sendPost(options, postForm, 'application/x-www-form-urlencoded', callback);
@@ -117,7 +146,15 @@ function form(url, data, headers, callback) {
  * @param { ResponseCallback    } callback
  */
 function json(url, data, headers, callback) {
-    const options = makeReqOptions(url, headers, 'POST');
+    let options;
+
+    try {
+        options = makeReqOptions(url, headers, 'POST');
+    } catch (e) {
+        callback(e.message, null, getRequestProperties());
+        return;
+    }
+
     const postText = JSON.stringify(data);
 
     sendPost(options, postText, 'application/json', callback);
@@ -249,32 +286,31 @@ function sendRequest(options, postData, callback) {
 
         return buffer.toString();
     }
+}
 
-    /**
-     * Copies the response properties
-     *
-     * @param { ClientRequest   } req
-     * @param { IncomingMessage } [res]
-     *
-     * @return { RequestProperties }
-     */
-    function getRequestProperties(req, res) {
-
-        // noinspection JSUnresolvedVariable
-        return {
-            aborted       : res?.aborted,
-            complete      : res?.complete,
-            headers       : { ...res?.headers },
-            host          : req.host,
-            httpVersion   : res?.httpVersion,
-            method        : req.method,
-            outputSize    : req.outputSize,
-            path          : req.path,
-            protocol      : req.protocol,
-            statusCode    : res?.statusCode,
-            statusMessage : res?.statusMessage,
-        };
-    }
+/**
+ * Copies the response properties
+ *
+ * @param { ClientRequest   } [req]
+ * @param { IncomingMessage } [res]
+ *
+ * @return { RequestProperties }
+ */
+function getRequestProperties(req, res) {
+    // noinspection JSUnresolvedVariable
+    return {
+        aborted       : res?.aborted,
+        complete      : res?.complete,
+        headers       : { ...res?.headers },
+        host          : req?.host,
+        httpVersion   : res?.httpVersion,
+        method        : req?.method,
+        outputSize    : req?.outputSize,
+        path          : req?.path,
+        protocol      : req?.protocol,
+        statusCode    : res?.statusCode,
+        statusMessage : res?.statusMessage,
+    };
 }
 
 module.exports = {
