@@ -28,8 +28,7 @@ Make a **GET** request
 const url     = 'https://example.com/get?foo=bar';
 const headers = {'Username': 'John Doe'};
 
-request.get(url, headers,
-    request_ready);
+request.get(url, headers, callback);
 ```
 
 Make a **POST** request
@@ -39,8 +38,7 @@ const url     = 'https://example.com/post?foo=bar';
 const data    = {answer: 42}; // Can be anything
 const headers = {'Username': 'John Doe'};
 
-request.post(url, data, headers,
-    request_ready);
+request.post(url, data, headers, callback);
 ```
 
 **POST form** request with a `Content-Type: x-www-form-urlencoded` header
@@ -50,8 +48,7 @@ const url     = 'https://example.com/form';
 const form    = {name: 'John Doe', email: 'john@example.com'};
 const headers = {};
 
-request.form(url, form, headers,
-    request_ready);
+request.form(url, form, headers, callback);
 ```
 
 **POST json** request with a `Content-Type: application/json` header
@@ -61,14 +58,13 @@ const url     = 'https://example.com/api';
 const object  = {answer: 42, numbers: [1, 2, 3, 4]};
 const headers = {};
 
-request.json(url, object, headers,
-    request_ready);
+request.json(url, object, headers, callback);
 ```
 
 The **request-service** accepts equal callback for both GET and POST requests.
 
 ```javascript
-function request_ready(err, data, prop) {
+function callback(err, data, prop) {
     if (err) {
         console.error('Error: ' + err);
     }
