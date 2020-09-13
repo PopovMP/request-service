@@ -226,6 +226,20 @@ function sendRequest(options, postData, callback) {
         callback(err.message, null, prop);
     });
 
+    req.on('abort', () => {
+        // noinspection JSCheckFunctionSignatures
+        /** @type { RequestProperties } */
+        const prop = getRequestProperties(req);
+        callback('Request abort', null, prop);
+    });
+
+    req.on('timeout', () => {
+        // noinspection JSCheckFunctionSignatures
+        /** @type { RequestProperties } */
+        const prop = getRequestProperties(req);
+        callback('Request timeout', null, prop);
+    });
+
     if (postData) {
         req.write(postData);
     }
@@ -258,9 +272,14 @@ function sendRequest(options, postData, callback) {
 
             /** @type { RequestProperties } */
             const prop = getRequestProperties(this, res);
-
             callback(err, body, prop);
         });
+
+        res.on('aborted', () => {
+            /** @type { RequestProperties } */
+            const prop = getRequestProperties(this, res);
+            callback('Response aborted', null, prop);
+        })
     }
 
     /**
