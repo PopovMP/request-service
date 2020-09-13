@@ -81,6 +81,25 @@ function callback(err, data, prop) {
 npm install @popovmp/request-service
 ```
 
+## Usage
+
+**request-service** is a http/https client. It sends requests and manages the responses. It also tries to set proper
+'Content-Type' headers for the request and to parse the response body.
+
+Yuo can use it in ywo ways:
+
+```javascript
+const request = require('@popovmp/request-service');
+
+request.form(url, data, headers, callback);
+``` 
+
+or you can use convenient method aliases:
+
+```javascript
+const { requestHead, requestGet, requestPost, requestForm, requestJson } = require('@popovmp/request-service');
+```
+
 ## Default Content-Type header
 
 If, you do not provide a `Content-Type` header, **request-service** sets a default `Content-Type` header

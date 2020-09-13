@@ -338,4 +338,9 @@ module.exports = {
     post,
     form,
     json,
+    requestHead: head,
+    requestGet : get,
+    requestPost: post,
+    requestForm: form,
+    requestJson: json,
 };
