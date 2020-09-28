@@ -291,15 +291,15 @@ function sendRequest(options, postData, callback) {
      * @return { Buffer | Object | string }
      */
     function parseBody(buffer, contentType) {
-        if (contentType.includes('octet-stream')) {
+        if (contentType?.includes('octet-stream')) {
             return buffer;
         }
 
-        if (contentType.includes('json')) {
+        if (contentType?.includes('json')) {
             return JSON.parse(buffer.toString());
         }
 
-        if (contentType.includes('urlencoded')) {
+        if (contentType?.includes('urlencoded')) {
             return queryString.parse(buffer.toString());
         }
 
