@@ -1,12 +1,11 @@
 {
   "name": "@popovmp/request-service",
-  "version": "4.7.1",
+  "version": "4.7.2",
   "description": "Make HEAD, GET, and POST requests with default headers and parse the response",
   "main": "index.js",
   "author": "Popov MP <info@forexsb.com>",
   "license": "MIT",
   "homepage": "https://github.com/popovmp/request-service",
-  "dependencies": {},
   "devDependencies": {
     "@popovmp/mocha-tiny": "^1.3.1"
   },
