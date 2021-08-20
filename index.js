@@ -35,7 +35,7 @@ const queryString = require('querystring');
  * @property { string              } path
  * @property { number              } port
  * @property { string              } protocol
- * @property { OutgoingHttpHeaders } header
+ * @property { OutgoingHttpHeaders } headers
  * @property { string              } method
  */
 
@@ -43,8 +43,10 @@ const queryString = require('querystring');
  * Sends a HEAD request.
  *
  * @param { string              } url
- * @param { OutgoingHttpHeaders } headers
+ * @param { OutgoingHttpHeaders | * } headers
  * @param { ResponseCallback    } callback
+ *
+ * @return { void }
  */
 function head(url, headers, callback) {
     let options;
@@ -63,8 +65,10 @@ function head(url, headers, callback) {
  * Sends a GET request.
  *
  * @param { string              } url
- * @param { OutgoingHttpHeaders } headers
+ * @param { OutgoingHttpHeaders | * } headers
  * @param { ResponseCallback    } callback
+ *
+ * @return { void }
  */
 function get(url, headers, callback) {
     let options;
@@ -84,8 +88,10 @@ function get(url, headers, callback) {
  *
  * @param { string              } url
  * @param { any                 } data
- * @param { OutgoingHttpHeaders } headers
+ * @param { OutgoingHttpHeaders | * } headers
  * @param { ResponseCallback    } callback
+ *
+ * @return { void }
  */
 function post(url, data, headers, callback) {
     let options;
@@ -119,8 +125,10 @@ function post(url, data, headers, callback) {
  *
  * @param { string              } url
  * @param { object              } data - values can be object, string, numbers or arrays.
- * @param { OutgoingHttpHeaders } headers
+ * @param { OutgoingHttpHeaders | * } headers
  * @param { ResponseCallback    } callback
+ *
+ * @return { void }
  */
 function form(url, data, headers, callback) {
     let options;
@@ -142,8 +150,10 @@ function form(url, data, headers, callback) {
  *
  * @param { string              } url
  * @param { object              } data
- * @param { OutgoingHttpHeaders } headers
+ * @param { OutgoingHttpHeaders | * } headers
  * @param { ResponseCallback    } callback
+ *
+ * @return { void }
  */
 function json(url, data, headers, callback) {
     let options;
@@ -163,9 +173,9 @@ function json(url, data, headers, callback) {
 /**
  * Parses an URL string
  *
- * @param { string              } url
- * @param { OutgoingHttpHeaders } headers
- * @param { string              } method
+ * @param { string } url
+ * @param { OutgoingHttpHeaders | * } headers
+ * @param { string } method
  *
  * @return { RequestOptions }
  */
@@ -190,6 +200,8 @@ function makeReqOptions(url, headers, method) {
  * @param { Buffer|string|null } data
  * @param { string             } contentType
  * @param { ResponseCallback   } callback
+ *
+ * @return { void }
  */
 function sendPost(options, data, contentType, callback) {
     if (Buffer.isBuffer(data) || typeof data === 'string') {
@@ -210,6 +222,8 @@ function sendPost(options, data, contentType, callback) {
  * @param { RequestOptions     } options
  * @param { Buffer|string|null } postData
  * @param { ResponseCallback   } callback
+ *
+ * @return { void }
  */
 function sendRequest(options, postData, callback) {
     const transporter = options.protocol === 'https:'
@@ -250,7 +264,7 @@ function sendRequest(options, postData, callback) {
      * @param  { IncomingMessage } res
      */
     function reqCallback(res) {
-        /** @type { Buffer[] }*/
+        /** @type { Buffer[] } */
         const chunks = [];
 
         res.on('data', (chunk) => {
