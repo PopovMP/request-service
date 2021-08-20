@@ -9,7 +9,6 @@ const url     = 'https://httpbin.org/post?foo=bar';
 const data    = {'pi': 3.14};
 const headers = {'Client': 'request-service', 'Answer': 42};
 
-
 request.post(url, data, headers,
     request_post_ready);
 
