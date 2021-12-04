@@ -1,6 +1,6 @@
 {
   "name": "@popovmp/request-service",
-  "version": "4.8.0",
+  "version": "4.8.1",
   "description": "Make HEAD, GET, and POST requests with default headers and parse the response",
   "main": "index.js",
   "author": "Popov MP <info@forexsb.com>",
