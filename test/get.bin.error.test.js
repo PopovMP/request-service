@@ -29,7 +29,6 @@ describe('Test GET 0 bytes', () => {
 			it('Content-length 0', () => {
 				strictEqual(prop.headers['content-length'], '0')
 			})
-
 		})
 	}
 })

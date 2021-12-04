@@ -229,10 +229,8 @@ function sendRequest(options, postData, callback) {
 	const transporter    = options.protocol === 'https:' ? https : http
 	const req            = transporter.request(options, reqCallback)
 
-	let timeoutHandler   = 0
-	let isCancelCallback = false
 	if (options.headers && typeof options.headers['Request-Timeout'] === 'number') {
-		timeoutHandler = setTimeout(onReady, options.headers['Request-Timeout'] * 1000, 'Request timeout', null, req)
+		req.setTimeout(options.headers['Request-Timeout'] * 1000)
 	}
 
 	req.on('error', (err) => {
@@ -244,7 +242,8 @@ function sendRequest(options, postData, callback) {
 	})
 
 	req.on('timeout', () => {
-		onReady('Request timeout', null, req)
+		// Destroy the request to prevent a double callback call.
+		req.destroy()
 	})
 
 	if (postData) {
@@ -290,14 +289,9 @@ function sendRequest(options, postData, callback) {
 	}
 
 	function onReady(err, data, target) {
-		if (!isCancelCallback) {
-			isCancelCallback = true
-			clearTimeout(timeoutHandler)
-
-			/** @type { RequestProperties } */
-			const prop = getRequestProperties(this, target)
-			callback(err, data, prop)
-		}
+		/** @type { RequestProperties } */
+		const prop = getRequestProperties(this, target)
+		callback(err, data, prop)
 	}
 
 	/**
