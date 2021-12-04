@@ -8,8 +8,8 @@ const request = require('../index.js');
 request.get(undefined, {}, (err, data)=> {
     describe('Exceptions', () => {
         describe('get(undefined, {}, callback)', ()=>{
-            it('Invalid URL: undefined', () => {
-                strictEqual(err, 'Invalid URL: undefined');
+            it('Invalid URL', () => {
+                strictEqual(err, 'Invalid URL');
                 ok(!data);
             })
         });
