@@ -1,12 +1,12 @@
 'use strict'
 
-const {ok}  = require('assert')
+const {strictEqual}  = require('assert')
 const {describe, it} = require('@popovmp/mocha-tiny')
 
 const request = require('../index.js')
 
 describe('Test GET 0 bytes', () => {
-	request.get('https://datafeed.dukascopy.com/datafeed/USATECHIDXUSD/2021/11/03/22h_ticks.bi5', {'Request-Timeout': 5},
+	request.get('https://datafeed.dukascopy.com/datafeed/USATECHIDXUSD/2021/11/03/22h_ticks.bi5', {'Request-Timeout': 3},
 		request_get_ready)
 
 	/**
@@ -19,8 +19,16 @@ describe('Test GET 0 bytes', () => {
 	function request_get_ready(err, data, prop) {
 
 		describe('get(url, headers, callback)', () => {
+			if (err === 'socket hang up') {
+				return
+			}
+
 			it('Status code 200', () => {
-				ok(true)
+				strictEqual(prop.statusCode, 200)
+			})
+
+			it('Content-length 0', () => {
+				strictEqual(prop.headers['content-length'], '0')
 			})
 		})
 	}

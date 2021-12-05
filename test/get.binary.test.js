@@ -7,7 +7,7 @@ const request = require('../index.js');
 
 const url = 'https://datafeed.dukascopy.com/datafeed/EURUSD/2020/07/24/07h_ticks.bi5';
 
-request.get(url, {},
+request.get(url, {'Request-Timeout': 3},
     request_get_ready);
 
 /**
@@ -21,6 +21,10 @@ function request_get_ready(err, data, prop) {
     describe('Test GET binary data', () => {
 
         describe('get(url, headers, callback)', () => {
+
+			if (err === 'socket hang up') {
+				return
+			}
 
             it('No errors', () => {
                 ok(!err);
