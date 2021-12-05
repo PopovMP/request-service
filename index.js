@@ -307,6 +307,10 @@ function sendRequest(options, postData, callback) {
 			return buffer
 		}
 
+		if (contentType?.includes('application/zip')) {
+			return buffer
+		}
+
 		if (contentType?.includes('json')) {
 			return JSON.parse(buffer.toString())
 		}
