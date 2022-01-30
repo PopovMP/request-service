@@ -5,7 +5,7 @@ const {describe, it} = require('@popovmp/mocha-tiny')
 
 const request = require('../index.js')
 
-request.get('https://httpbin.org/delay/10', {'Request-Timeout': 1},
+request.get('https://httpbin.org/delay/3', {'Request-Timeout': 1},
 	request_get_ready)
 
 /**

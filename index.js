@@ -237,10 +237,6 @@ function sendRequest(options, postData, callback) {
 		onReady(err.message, null, req)
 	})
 
-	req.on('abort', () => {
-		onReady('Request abort', null, req)
-	})
-
 	req.on('timeout', () => {
 		// Destroy the request to prevent a double callback call.
 		req.destroy()
@@ -277,10 +273,6 @@ function sendRequest(options, postData, callback) {
 			}
 
 			onReady(err, body, res)
-		})
-
-		res.on('aborted', () => {
-			onReady('Response aborted', null, res)
 		})
 
 		res.on('error', (err) => {
