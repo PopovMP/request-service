@@ -16,7 +16,8 @@ describe('Test GET 0 bytes', () => {
 	 * @param { Buffer | Object | string | null } data
 	 * @param { RequestProperties } [prop]
 	 */
-	function request_get_ready(err, data, prop) {
+	function request_get_ready(err, data, prop)
+	{
 
 		describe('get(url, headers, callback)', () => {
 			if (err === 'socket hang up') {

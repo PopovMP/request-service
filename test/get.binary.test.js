@@ -1,14 +1,14 @@
-'use strict';
+'use strict'
 
-const {ok, strictEqual} = require('assert');
-const {describe, it} = require('@popovmp/mocha-tiny');
+const {ok, strictEqual} = require('assert')
+const {describe, it   } = require('@popovmp/mocha-tiny')
 
-const request = require('../index.js');
+const request = require('../index.js')
 
-const url = 'https://datafeed.dukascopy.com/datafeed/EURUSD/2020/07/24/07h_ticks.bi5';
+const url = 'https://datafeed.dukascopy.com/datafeed/EURUSD/2020/07/24/07h_ticks.bi5'
 
 request.get(url, {'Request-Timeout': 3},
-    request_get_ready);
+	request_get_ready)
 
 /**
  * @type { ResponseCallback }
@@ -17,39 +17,40 @@ request.get(url, {'Request-Timeout': 3},
  * @param { Buffer | Object | string | null } data
  * @param { RequestProperties } [prop]
  */
-function request_get_ready(err, data, prop) {
-    describe('Test GET binary data', () => {
+function request_get_ready(err, data, prop)
+{
+	describe('Test GET binary data', () => {
 
-        describe('get(url, headers, callback)', () => {
+		describe('get(url, headers, callback)', () => {
 
 			if (err === 'socket hang up') {
 				return
 			}
 
-            it('No errors', () => {
-                ok(!err);
-            });
+			it('No errors', () => {
+				ok(!err)
+			})
 
-            it('Response received', () => {
-                ok(data);
-            });
+			it('Response received', () => {
+				ok(data)
+			})
 
-            it('Status code 200', () => {
-                strictEqual(prop.statusCode, 200);
-            });
+			it('Status code 200', () => {
+				strictEqual(prop.statusCode, 200)
+			})
 
-            it('Status message "OK"', () => {
-                strictEqual(prop.statusMessage, 'OK');
-            });
+			it('Status message "OK"', () => {
+				strictEqual(prop.statusMessage, 'OK')
+			})
 
-            it('Received data is Buffer', () => {
-                ok(Buffer.isBuffer(data));
-            });
+			it('Received data is Buffer', () => {
+				ok(Buffer.isBuffer(data))
+			})
 
-            it('Equal data length and Content-Length', () => {
-                const contentLength = parseInt(prop.headers['content-length']);
-                strictEqual(data.length, contentLength);
-            });
-        });
-    });
+			it('Equal data length and Content-Length', () => {
+				const contentLength = parseInt(prop.headers['content-length'])
+				strictEqual(data.length, contentLength)
+			})
+		})
+	})
 }

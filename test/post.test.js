@@ -1,16 +1,16 @@
-'use strict';
+'use strict'
 
-const {ok, strictEqual} = require('assert');
-const {describe, it} = require('@popovmp/mocha-tiny');
+const {ok, strictEqual} = require('assert')
+const {describe, it}    = require('@popovmp/mocha-tiny')
 
-const request = require('../index.js');
+const request = require('../index.js')
 
-const url     = 'https://httpbin.org/post?foo=bar';
-const data    = {'pi': 3.14};
-const headers = {'Client': 'request-service', 'Answer': 42};
+const url     = 'https://httpbin.org/post?foo=bar'
+const data    = {'pi': 3.14}
+const headers = {'Client': 'request-service', 'Answer': 42}
 
 request.post(url, data, headers,
-    request_post_ready);
+	request_post_ready)
 
 /**
  * @type { ResponseCallback }
@@ -19,45 +19,46 @@ request.post(url, data, headers,
  * @param { Buffer | Object | string | null } data
  * @param { RequestProperties } [prop]
  */
-function request_post_ready(err, data, prop) {
-    describe('Test POST generic data', () => {
+function request_post_ready(err, data, prop)
+{
+	describe('Test POST generic data', () => {
 
-        describe('post(url, data, headers, callback)', () => {
-            it('No errors', () => {
-                ok(!err);
-            });
+		describe('post(url, data, headers, callback)', () => {
+			it('No errors', () => {
+				ok(!err)
+			})
 
-            it('Status code 200', () => {
-                strictEqual(prop.statusCode, 200);
-            });
+			it('Status code 200', () => {
+				strictEqual(prop.statusCode, 200)
+			})
 
-            it('Status message "OK"', () => {
-                strictEqual(prop.statusMessage, "OK");
-            });
+			it('Status message "OK"', () => {
+				strictEqual(prop.statusMessage, 'OK')
+			})
 
-            it('Response received', () => {
-                ok(data);
-            });
+			it('Response received', () => {
+				ok(data)
+			})
 
-            it('Correct query', () => {
-                // noinspection JSUnresolvedVariable
-                strictEqual(data.args.foo, 'bar');
-            });
+			it('Correct query', () => {
+				// noinspection JSUnresolvedVariable
+				strictEqual(data.args.foo, 'bar')
+			})
 
-            it('Correct string header', () => {
-                // noinspection JSUnresolvedVariable
-                strictEqual(data.headers.Client, 'request-service');
-            });
+			it('Correct string header', () => {
+				// noinspection JSUnresolvedVariable
+				strictEqual(data.headers.Client, 'request-service')
+			})
 
-            it('Correct numeric header', () => {
-                // noinspection JSUnresolvedVariable
-                strictEqual(data.headers.Answer, '42');
-            });
+			it('Correct numeric header', () => {
+				// noinspection JSUnresolvedVariable
+				strictEqual(data.headers.Answer, '42')
+			})
 
-            it('Correct data', () => {
-                // noinspection JSUnresolvedVariable
-                strictEqual(data.json.pi, 3.14);
-            });
-        });
-    });
+			it('Correct data', () => {
+				// noinspection JSUnresolvedVariable
+				strictEqual(data.json.pi, 3.14)
+			})
+		})
+	})
 }

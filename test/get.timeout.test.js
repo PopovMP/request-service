@@ -15,7 +15,8 @@ request.get('https://httpbin.org/delay/3', {'Request-Timeout': 1},
  * @param { Buffer | Object | string | null } data
  * @param { RequestProperties } [prop]
  */
-function request_get_ready(err, data, prop) {
+function request_get_ready(err, data, prop)
+{
 	describe('Test timeout', () => {
 
 		describe('req.destroy()', () => {
