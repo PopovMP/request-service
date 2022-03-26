@@ -1,8 +1,8 @@
 'use strict'
 
-const http        = require('http')
-const https       = require('https')
-const queryString = require('querystring')
+const http  = require('http')
+const https = require('https')
+const qs    = require('qs')
 
 /**
  * @typedef { function } ResponseCallback
@@ -142,7 +142,7 @@ function form(url, data, headers, callback)
 		return
 	}
 
-	const postForm = queryString.stringify(data)
+	const postForm = qs.stringify(data)
 
 	sendPost(options, postForm, 'application/x-www-form-urlencoded', callback)
 }
@@ -175,7 +175,7 @@ function json(url, data, headers, callback)
 }
 
 /**
- * Parses an URL string
+ * Parses a URL string
  *
  * @param { string } url
  * @param { OutgoingHttpHeaders | * } headers
@@ -312,7 +312,7 @@ function sendRequest(options, postData, callback)
 			return JSON.parse(buffer.toString())
 
 		if (contentType?.includes('urlencoded'))
-			return queryString.parse(buffer.toString())
+			return qs.parse( buffer.toString() )
 
 		return buffer.toString()
 	}
