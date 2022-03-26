@@ -44,7 +44,7 @@ request.post(url, data, headers, callback);
 **POST form** request with a `Content-Type: x-www-form-urlencoded` header
 
 **Note** - `form-urlencoded` queries **do not contain arrays**.
-If you query object has an array, the corresponding filed will be ignored in the request. 
+If your query object has an array, the corresponding field will be ignored in the request. 
 
 ```javascript
 const url     = 'https://example.com/form';
