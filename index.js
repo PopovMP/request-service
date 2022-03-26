@@ -48,7 +48,8 @@ const queryString = require('querystring')
  *
  * @return { void }
  */
-function head(url, headers, callback) {
+function head(url, headers, callback)
+{
 	let options
 
 	try {
@@ -70,12 +71,14 @@ function head(url, headers, callback) {
  *
  * @return { void }
  */
-function get(url, headers, callback) {
+function get(url, headers, callback)
+{
 	let options
 
 	try {
 		options = makeReqOptions(url, headers, 'GET')
-	} catch (e) {
+	}
+	catch (e) {
 		callback(e.message, null, getRequestProperties())
 		return
 	}
@@ -93,31 +96,28 @@ function get(url, headers, callback) {
  *
  * @return { void }
  */
-function post(url, data, headers, callback) {
+function post(url, data, headers, callback)
+{
 	let options
 
 	try {
 		options = makeReqOptions(url, headers, 'POST')
-	} catch (e) {
+	}
+	catch (e) {
 		callback(e.message, null, getRequestProperties())
 		return
 	}
 
-	if (data === null || data === undefined) {
+	if (data === null || data === undefined)
 		sendPost(options, null, '', callback)
-	}
-	else if (Buffer.isBuffer(data)) {
+	else if ( Buffer.isBuffer(data) )
 		sendPost(options, data, 'application/octet-stream', callback)
-	}
-	else if (typeof data === 'object') {
+	else if (typeof data === 'object')
 		sendPost(options, JSON.stringify(data), 'application/json', callback)
-	}
-	else if (typeof data === 'string') {
+	else if (typeof data === 'string')
 		sendPost(options, data, 'text/plain', callback)
-	}
-	else {
+	else
 		sendPost(options, String(data), 'text/plain', callback)
-	}
 }
 
 /**
@@ -130,12 +130,14 @@ function post(url, data, headers, callback) {
  *
  * @return { void }
  */
-function form(url, data, headers, callback) {
+function form(url, data, headers, callback)
+{
 	let options
 
 	try {
 		options = makeReqOptions(url, headers, 'POST')
-	} catch (e) {
+	}
+	catch (e) {
 		callback(e.message, null, getRequestProperties())
 		return
 	}
@@ -155,12 +157,14 @@ function form(url, data, headers, callback) {
  *
  * @return { void }
  */
-function json(url, data, headers, callback) {
+function json(url, data, headers, callback)
+{
 	let options
 
 	try {
 		options = makeReqOptions(url, headers, 'POST')
-	} catch (e) {
+	}
+	catch (e) {
 		callback(e.message, null, getRequestProperties())
 		return
 	}
@@ -179,7 +183,8 @@ function json(url, data, headers, callback) {
  *
  * @return { RequestOptions }
  */
-function makeReqOptions(url, headers, method) {
+function makeReqOptions(url, headers, method)
+{
 	/** @type { URL } */
 	const urlObj = new URL(url)
 
@@ -203,14 +208,13 @@ function makeReqOptions(url, headers, method) {
  *
  * @return { void }
  */
-function sendPost(options, data, contentType, callback) {
-	if (Buffer.isBuffer(data) || typeof data === 'string') {
+function sendPost(options, data, contentType, callback)
+{
+	if (Buffer.isBuffer(data) || typeof data === 'string')
 		options.headers['Content-Length'] = Buffer.byteLength(data)
-	}
 
-	if (contentType && !options.headers['Content-Type']) {
+	if (contentType && !options.headers['Content-Type'])
 		options.headers['Content-Type'] = contentType
-	}
 
 	sendRequest(options, data, callback)
 }
@@ -225,13 +229,13 @@ function sendPost(options, data, contentType, callback) {
  *
  * @return { void }
  */
-function sendRequest(options, postData, callback) {
+function sendRequest(options, postData, callback)
+{
 	const transporter    = options.protocol === 'https:' ? https : http
 	const req            = transporter.request(options, reqCallback)
 
-	if (options.headers && typeof options.headers['Request-Timeout'] === 'number') {
+	if (options.headers && typeof options.headers['Request-Timeout'] === 'number')
 		req.setTimeout(options.headers['Request-Timeout'] * 1000)
-	}
 
 	req.on('error', (err) => {
 		onReady(err.message, null, req)
@@ -242,16 +246,16 @@ function sendRequest(options, postData, callback) {
 		req.destroy()
 	})
 
-	if (postData) {
+	if (postData)
 		req.write(postData)
-	}
 
 	req.end()
 
 	/**
 	 * @param  { IncomingMessage } res
 	 */
-	function reqCallback(res) {
+	function reqCallback(res)
+	{
 		/** @type { Buffer[] } */
 		const chunks = []
 
@@ -268,7 +272,8 @@ function sendRequest(options, postData, callback) {
 
 			try {
 				body = parseBody(Buffer.concat(chunks), res.headers['content-type'])
-			} catch (e) {
+			}
+			catch (e) {
 				err = e.message
 			}
 
@@ -280,7 +285,8 @@ function sendRequest(options, postData, callback) {
 		})
 	}
 
-	function onReady(err, data, target) {
+	function onReady(err, data, target)
+	{
 		/** @type { RequestProperties } */
 		const prop = getRequestProperties(this, target)
 		callback(err, data, prop)
@@ -294,22 +300,19 @@ function sendRequest(options, postData, callback) {
 	 *
 	 * @return { Buffer | Object | string }
 	 */
-	function parseBody(buffer, contentType) {
-		if (contentType?.includes('octet-stream')) {
+	function parseBody(buffer, contentType)
+	{
+		if (contentType?.includes('octet-stream'))
 			return buffer
-		}
 
-		if (contentType?.includes('application/zip')) {
+		if (contentType?.includes('application/zip'))
 			return buffer
-		}
 
-		if (contentType?.includes('json')) {
+		if (contentType?.includes('json'))
 			return JSON.parse(buffer.toString())
-		}
 
-		if (contentType?.includes('urlencoded')) {
+		if (contentType?.includes('urlencoded'))
 			return queryString.parse(buffer.toString())
-		}
 
 		return buffer.toString()
 	}
@@ -323,7 +326,8 @@ function sendRequest(options, postData, callback) {
  *
  * @return { RequestProperties }
  */
-function getRequestProperties(req, res) {
+function getRequestProperties(req, res)
+{
 	// noinspection JSUnresolvedVariable
 	return {
 		aborted      : res?.aborted,
