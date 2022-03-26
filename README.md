@@ -43,6 +43,9 @@ request.post(url, data, headers, callback);
 
 **POST form** request with a `Content-Type: x-www-form-urlencoded` header
 
+**Note** - `form-urlencoded` queries **do not contain arrays**.
+If you query object has an array, the corresponding filed will be ignored in the request. 
+
 ```javascript
 const url     = 'https://example.com/form';
 const form    = {name: 'John Doe', email: 'john@example.com'};
@@ -239,4 +242,4 @@ function request_ready(err, data, prop) { }
 
 `request-service` is free for use and modification. No responsibilities for damages of any kind.
 
-Copyright (c) 2020 Miroslav Popov
+Copyright (c) 2022 Miroslav Popov
