@@ -1,24 +1,24 @@
 {
-  "name": "@popovmp/request-service",
-  "version": "5.0.0",
-  "description": "Make HEAD, GET, and POST requests with default headers and parse the response",
-  "main": "index.js",
-  "author": "Popov MP <info@forexsb.com>",
-  "license": "MIT",
-  "homepage": "https://github.com/popovmp/request-service",
-  "dependencies": {
-    "qs": "^6.10.3"
+  "name"         : "@popovmp/request-service",
+  "version"      : "5.1.0",
+  "description"  : "Make HEAD, GET, and POST requests with default headers and parse the response",
+  "main"         : "index.js",
+  "author"       : "PopovMP <info@forexsb.com>",
+  "license"      : "MIT",
+  "homepage"     : "https://github.com/popovmp/request-service",
+  "dependencies" : {
+    "qs": "^6.10.5"
   },
   "devDependencies": {
     "@popovmp/mocha-tiny": "^2.1.0"
   },
   "scripts": {
-    "test": "mocha-tiny",
+    "test"          : "mocha-tiny",
     "prepublishOnly": "npm test"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/popovmp/request-service.git"
+    "url" : "git@github.com:PopovMP/request-service.git"
   },
   "keywords": [
     "request",
