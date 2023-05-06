@@ -1,6 +1,6 @@
 {
   "name"         : "@popovmp/request-service",
-  "version"      : "5.1.0",
+  "version"      : "5.2.0",
   "description"  : "Make HEAD, GET, and POST requests with default headers and parse the response",
   "main"         : "index.js",
   "author"       : "PopovMP <info@forexsb.com>",
@@ -10,7 +10,7 @@
     "qs": "^6.10.5"
   },
   "devDependencies": {
-    "@popovmp/mocha-tiny": "^2.1.0"
+    "@popovmp/mocha-tiny": "^3.1.0"
   },
   "scripts": {
     "test"          : "mocha-tiny",

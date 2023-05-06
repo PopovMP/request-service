@@ -267,23 +267,23 @@ function sendRequest(options, postData, callback)
 	 * Prepares response data
 	 *
 	 * @param { Buffer } buffer
-	 * @param { string } contentType
+	 * @param { string } [contentType]
 	 *
 	 * @return { Buffer | Object | string }
 	 */
-	function parseBody(buffer, contentType)
+	function parseBody(buffer, contentType = '')
 	{
-		if ( contentType?.includes('octet-stream') )
+		if (contentType.includes('octet-stream'))
 			return buffer
 
-		if ( contentType?.includes('application/zip') )
+		if (contentType.includes('application/zip'))
 			return buffer
 
-		if ( contentType?.includes('json') )
-			return JSON.parse( buffer.toString() )
+		if (contentType.includes('json'))
+			return JSON.parse(buffer.toString())
 
-		if ( contentType?.includes('urlencoded') )
-			return qs.parse( buffer.toString() )
+		if (contentType.includes('urlencoded'))
+			return qs.parse(buffer.toString())
 
 		return buffer.toString()
 	}
@@ -301,17 +301,17 @@ function getRequestProperties(req, res)
 {
 	// noinspection JSUnresolvedVariable
 	return {
-		aborted      : res?.aborted,
-		complete     : res?.complete,
-		headers      : {...res?.headers},
-		host         : req?.host,
-		httpVersion  : res?.httpVersion,
-		method       : req?.method,
-		outputSize   : req?.outputSize,
-		path         : req?.path,
-		protocol     : req?.protocol,
-		statusCode   : res?.statusCode,
-		statusMessage: res?.statusMessage,
+		aborted      : res && res.aborted,
+		complete     : res && res.complete,
+		headers      : res && res.headers ? {...res.headers} : {},
+		host         : req && req.host,
+		httpVersion  : res && res.httpVersion,
+		method       : req && req.method,
+		outputSize   : req && req.outputSize,
+		path         : req && req.path,
+		protocol     : req && req.protocol,
+		statusCode   : res && res.statusCode,
+		statusMessage: res && res.statusMessage,
 	}
 }
 
