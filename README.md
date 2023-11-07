@@ -1,6 +1,6 @@
 # Make HEAD, GET, and POST requests with default headers and parse the response
 
-**request-service** sends `GET`, `POST`, and `HEAD` request with some automations:
+**request-service** sends `GET`, `POST`, `PUT`, and `HEAD` request with some automations:
   - sets default `Content-Type` header depending on the data type
   - sets the `Content-Length` header
   - parses the received data depending on the incoming headers to `JSON`, `Buffer`, or a `string`.
@@ -86,10 +86,12 @@ npm install @popovmp/request-service
 
 ## Usage
 
-**request-service** is a http/https client. It sends requests and manages the responses. It also tries to set proper
+**request-service** is a "http"/"https" client.
+It sends requests and manages the responses.
+It also tries to set a proper
 'Content-Type' headers for the request and to parse the response body.
 
-Yuo can use it in ywo ways:
+Yuo can use it in two ways:
 
 ```javascript
 const request = require('@popovmp/request-service');
@@ -143,21 +145,21 @@ An example of **Request properties**:
   "aborted": false,
   "complete": true,
   "headers": {
-    "date": "Sat, 29 Aug 2020 06:41:37 GMT",
-    "content-type": "application/json",
+    "date"          : "Sat, 29 Aug 2020 06:41:37 GMT",
+    "content-type"  : "application/json",
     "content-length": "283",
-    "connection": "close",
-    "server": "gunicorn/19.9.0",
-    "access-control-allow-origin": "*",
+    "connection"    : "close",
+    "server"        : "gunicorn/19.9.0",
+    "access-control-allow-origin"     : "*",
     "access-control-allow-credentials": "true"
   },
-  "host": "httpbin.org",
-  "httpVersion": "1.1",
-  "method": "GET",
-  "outputSize": 0,
-  "path": "/get?foo=bar",
-  "protocol": "https:",
-  "statusCode": 200,
+  "host"         : "httpbin.org",
+  "httpVersion"  : "1.1",
+  "method"       : "GET",
+  "outputSize"   : 0,
+  "path"         : "/get?foo=bar",
+  "protocol"     : "https:",
+  "statusCode"   : 200,
   "statusMessage": "OK"
 }
 ```
@@ -198,6 +200,18 @@ function get(url, headers, callback) { }
  * @param {ResponseCallback} callback
  */
 function post(url, data, headers, callback) { }
+````
+
+```javascript
+/**
+ * Sends a PUT request.
+ *
+ * @param {string} url
+ * @param {any} data
+ * @param {OutgoingHttpHeaders} headers
+ * @param {ResponseCallback} callback
+ */
+function put(url, data, headers, callback) { }
 ````
 
 ```javascript

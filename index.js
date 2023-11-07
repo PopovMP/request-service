@@ -81,9 +81,38 @@ function get(url, headers, callback)
  *
  * @return { void }
  */
-function post(url, data, headers, callback)
+function post(url, data, headers, callback) {
+	postPut('POST', url, data, headers, callback)
+}
+
+/**
+ * Sends a PUT request.
+ *
+ * @param { string                  } url
+ * @param { any                     } data
+ * @param { OutgoingHttpHeaders | * } headers
+ * @param { ResponseCallback        } callback
+ *
+ * @return { void }
+ */
+function put(url, data, headers, callback) {
+	postPut('PUT', url, data, headers, callback)
+}
+
+/**
+ * Sends a POST or PUT request.
+ *
+ * @param { string                  } method
+ * @param { string                  } url
+ * @param { any                     } data
+ * @param { OutgoingHttpHeaders | * } headers
+ * @param { ResponseCallback        } callback
+ *
+ * @return { void }
+ */
+function postPut(method, url, data, headers, callback)
 {
-	const options = makeReqOptions(url, headers, 'POST')
+	const options = makeReqOptions(url, headers, method)
 
 	if (data === null || data === undefined) {
 		sendPost(options, null, '', callback)
@@ -169,7 +198,7 @@ function makeReqOptions(url, headers, method)
 }
 
 /**
- * Prepares post request headers and sends the request
+ * Prepares request headers and sends the request
  *
  * @param { RequestOptions     } options
  * @param { Buffer|string|null } data
@@ -319,11 +348,13 @@ module.exports = {
 	head,
 	get,
 	post,
+	put,
 	form,
 	json,
 	requestHead: head,
 	requestGet : get,
 	requestPost: post,
+	requestPut : put,
 	requestForm: form,
 	requestJson: json,
 }
