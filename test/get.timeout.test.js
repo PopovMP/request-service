@@ -5,9 +5,9 @@ const {test}        = require("node:test");
 
 const request = require("../index.js");
 
-const url = "https://httpbin.org/delay/3";
+test("Request-Timeout header", (_, done) => {
+    const url = "https://httpbin.org/delay/3";
 
-test("Test timeout", (_, done) => {
     request.get(url, {"Request-Timeout": 1}, request_get_ready);
 
     /**

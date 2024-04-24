@@ -48,9 +48,9 @@ const qs    = require("qs");
  * @return { void }
  */
 function head(url, headers, callback) {
-	const options = makeReqOptions(url, headers, "HEAD");
+    const options = makeReqOptions(url, headers, "HEAD");
 
-	sendRequest(options, null, callback);
+    sendRequest(options, null, callback);
 }
 
 /**
@@ -63,9 +63,9 @@ function head(url, headers, callback) {
  * @return { void }
  */
 function get(url, headers, callback) {
-	const options = makeReqOptions(url, headers, "GET");
+    const options = makeReqOptions(url, headers, "GET");
 
-	sendRequest(options, null, callback);
+    sendRequest(options, null, callback);
 }
 
 /**
@@ -79,7 +79,7 @@ function get(url, headers, callback) {
  * @return { void }
  */
 function post(url, data, headers, callback) {
-	postPut("POST", url, data, headers, callback);
+    postPut("POST", url, data, headers, callback);
 }
 
 /**
@@ -93,7 +93,7 @@ function post(url, data, headers, callback) {
  * @return { void }
  */
 function put(url, data, headers, callback) {
-	postPut("PUT", url, data, headers, callback);
+    postPut("PUT", url, data, headers, callback);
 }
 
 /**
@@ -108,29 +108,29 @@ function put(url, data, headers, callback) {
  * @return { void }
  */
 function postPut(method, url, data, headers, callback) {
-	const options = makeReqOptions(url, headers, method);
+    const options = makeReqOptions(url, headers, method);
 
-	if (data === null || data === undefined) {
-		sendPost(options, null, "", callback);
-		return;
-	}
+    if (data === null || data === undefined) {
+        sendPost(options, null, "", callback);
+        return;
+    }
 
-	if ( Buffer.isBuffer(data) ) {
-		sendPost(options, data, "application/octet-stream", callback);
-		return;
-	}
+    if ( Buffer.isBuffer(data) ) {
+        sendPost(options, data, "application/octet-stream", callback);
+        return;
+    }
 
-	if (typeof data === "object") {
-		sendPost(options, JSON.stringify(data), "application/json", callback);
-		return;
-	}
+    if (typeof data === "object") {
+        sendPost(options, JSON.stringify(data), "application/json", callback);
+        return;
+    }
 
-	if (typeof data === "string") {
-		sendPost(options, data, "text/plain", callback);
-		return;
-	}
+    if (typeof data === "string") {
+        sendPost(options, data, "text/plain", callback);
+        return;
+    }
 
-	sendPost(options, String(data), "text/plain", callback);
+    sendPost(options, String(data), "text/plain", callback);
 }
 
 /**
@@ -144,10 +144,10 @@ function postPut(method, url, data, headers, callback) {
  * @return { void }
  */
 function form(url, data, headers, callback) {
-	const options  = makeReqOptions(url, headers, "POST");
-	const postForm = qs.stringify(data);
+    const options  = makeReqOptions(url, headers, "POST");
+    const postForm = qs.stringify(data);
 
-	sendPost(options, postForm, "application/x-www-form-urlencoded", callback);
+    sendPost(options, postForm, "application/x-www-form-urlencoded", callback);
 }
 
 /**
@@ -161,10 +161,10 @@ function form(url, data, headers, callback) {
  * @return { void }
  */
 function json(url, data, headers, callback) {
-	const options  = makeReqOptions(url, headers, "POST");
-	const postText = JSON.stringify(data);
+    const options  = makeReqOptions(url, headers, "POST");
+    const postText = JSON.stringify(data);
 
-	sendPost(options, postText, "application/json", callback);
+    sendPost(options, postText, "application/json", callback);
 }
 
 /**
@@ -177,17 +177,17 @@ function json(url, data, headers, callback) {
  * @return { RequestOptions }
  */
 function makeReqOptions(url, headers, method) {
-	/** @type { URL } */
-	const urlObj = new URL(url);
+    /** @type { URL } */
+    const urlObj = new URL(url);
 
-	return {
-		hostname: urlObj.hostname,
-		path    : urlObj.pathname + urlObj.search,
-		port    : urlObj.port || (urlObj.protocol === "https:" ? 443 : 80),
-		protocol: urlObj.protocol,
-		headers,
-		method,
-	};
+    return {
+        hostname: urlObj.hostname,
+        path    : urlObj.pathname + urlObj.search,
+        port    : urlObj.port || (urlObj.protocol === "https:" ? 443 : 80),
+        protocol: urlObj.protocol,
+        headers,
+        method,
+    };
 }
 
 /**
@@ -201,13 +201,13 @@ function makeReqOptions(url, headers, method) {
  * @return { void }
  */
 function sendPost(options, data, contentType, callback) {
-	if (Buffer.isBuffer(data) || typeof data === "string")
-		options.headers["Content-Length"] = Buffer.byteLength(data).toString();
+    if (Buffer.isBuffer(data) || typeof data === "string")
+        options.headers["Content-Length"] = Buffer.byteLength(data).toString();
 
-	if (contentType && !options.headers["Content-Type"])
-		options.headers["Content-Type"] = contentType;
+    if (contentType && !options.headers["Content-Type"])
+        options.headers["Content-Type"] = contentType;
 
-	sendRequest(options, data, callback);
+    sendRequest(options, data, callback);
 }
 
 // noinspection JSCheckFunctionSignatures
@@ -221,91 +221,85 @@ function sendPost(options, data, contentType, callback) {
  * @return { void }
  */
 function sendRequest(options, postData, callback) {
-	const transporter = options.protocol === "https:" ? https : http;
-	const req         = transporter.request(options, reqCallback);
+    const transporter = options.protocol === "https:" ? https : http;
+    const req         = transporter.request(options, reqCallback);
+    let   isReady     = false;
 
-	if (options.headers && typeof options.headers["Request-Timeout"] === "number")
-		req.setTimeout(options.headers["Request-Timeout"] * 1000);
+    if (options.headers && typeof options.headers["Request-Timeout"] === "number")
+        req.setTimeout(options.headers["Request-Timeout"] * 1000);
 
-	req.on("error", (err) => {
-		onReady(err.message, null, req);
-	});
+    req.on("error", (err) => onReady(err.message, null, req));
 
-	req.on("timeout", () => {
-		// Destroy the request to prevent a double callback call.
-		req.destroy();
-	});
+    req.on("timeout", () => void req.destroy());
 
-	if (postData)
-		req.write(postData);
+    if (postData)
+        req.write(postData);
 
-	req.end();
+    req.end();
 
-	/**
-	 * @param  { IncomingMessage } res
-	 */
-	function reqCallback(res) {
-		/** @type { Buffer[] } */
-		const chunks = [];
+    /**
+     * @param  { IncomingMessage } res
+     */
+    function reqCallback(res) {
+        /** @type { Buffer[] } */
+        const chunks = [];
 
-		res.on("data", (chunk) => {
-			chunks.push(chunk);
-		});
+        res.on("data", (chunk) => void chunks.push(chunk));
 
-		res.on("end", () => {
-			/** @type { Buffer | Object | string | null } */
-			let body = null;
+        res.on("error", (err) => onReady(err.message, null, res));
 
-			/** @type { string | null } */
-			let err = null;
+        res.on("end", () => {
+            /** @type { Buffer | Object | string | null } */
+            let body = null;
 
-			try {
-				body = parseBody(Buffer.concat(chunks), res.headers["content-type"]);
-			}
-			catch (e) {
-				err = e.message;
-			}
+            /** @type { string | null } */
+            let err = null;
 
-			onReady(err, body, res);
-		})
+            try {
+                body = parseBody(Buffer.concat(chunks), res.headers["content-type"]);
+            }
+            catch (e) {
+                err = e.message;
+            }
 
-		res.on("error", (err) => {
-			onReady(err.message, null, res);
-		})
-	}
+            onReady(err, body, res);
+        })
+    }
 
-	function onReady(err, data, target) {
-		/** @type { RequestProperties } */
-		const prop = getRequestProperties(this, target);
+    function onReady(err, data, target) {
+        if (isReady) return;
+        isReady = true;
 
-		callback(err, data, prop);
-	}
+        /** @type { RequestProperties } */
+        const prop = getRequestProperties(this, target);
 
-	/**
-	 * Prepares response data
-	 *
-	 * @param { Buffer } buffer
-	 * @param { string } [contentType]
-	 *
-	 * @return { Buffer | Object | string }
-	 */
-	function parseBody(buffer, contentType = "") {
-		if (contentType.includes("octet-stream"))
-			return buffer;
-
-		if (contentType.includes("application/zip"))
-			return buffer;
-
-		if (contentType.includes("json"))
-			return JSON.parse(buffer.toString());
-
-		if (contentType.includes("urlencoded"))
-			return qs.parse(buffer.toString());
-
-		return buffer.toString();
-	}
+        callback(err, data, prop);
+    }
 }
 
+/**
+ * Prepares response data
+ *
+ * @param { Buffer } buffer
+ * @param { string } [contentType]
+ *
+ * @return { Buffer | Object | string }
+ */
+function parseBody(buffer, contentType = "") {
+    if (contentType.includes("octet-stream"))
+        return buffer;
+
+    if (contentType.includes("application/zip"))
+        return buffer;
+
+    if (contentType.includes("json"))
+        return JSON.parse(buffer.toString());
+
+    if (contentType.includes("urlencoded"))
+        return qs.parse(buffer.toString());
+
+    return buffer.toString();
+}
 /**
  * Copies the response properties
  *
@@ -315,32 +309,32 @@ function sendRequest(options, postData, callback) {
  * @return { RequestProperties }
  */
 function getRequestProperties(req, res) {
-	// noinspection JSUnresolvedVariable
-	return {
-		complete     : res && res.complete,
-		headers      : res && res.headers ? {...res.headers} : {},
-		host         : req && req.host,
-		httpVersion  : res && res.httpVersion,
-		method       : req && req.method,
-		outputSize   : req && req.outputSize,
-		path         : req && req.path,
-		protocol     : req && req.protocol,
-		statusCode   : res && res.statusCode,
-		statusMessage: res && res.statusMessage,
-	};
+    // noinspection JSUnresolvedVariable
+    return {
+        complete     : res && res.complete,
+        headers      : res && res.headers ? {...res.headers} : {},
+        host         : req && req.host,
+        httpVersion  : res && res.httpVersion,
+        method       : req && req.method,
+        outputSize   : req && req.outputSize,
+        path         : req && req.path,
+        protocol     : req && req.protocol,
+        statusCode   : res && res.statusCode,
+        statusMessage: res && res.statusMessage,
+    };
 }
 
 module.exports = {
-	head,
-	get,
-	post,
-	put,
-	form,
-	json,
-	requestHead: head,
-	requestGet : get,
-	requestPost: post,
-	requestPut : put,
-	requestForm: form,
-	requestJson: json,
+    head,
+    get,
+    post,
+    put,
+    form,
+    json,
+    requestHead: head,
+    requestGet : get,
+    requestPost: post,
+    requestPut : put,
+    requestForm: form,
+    requestJson: json,
 };
