@@ -1,41 +1,37 @@
-'use strict'
+"use strict";
 
-const {ok, strictEqual} = require('assert')
-const {describe, it}    = require('@popovmp/mocha-tiny')
+const {strictEqual, ok} = require("assert");
+const {test}            = require("node:test");
 
-const request = require('../index.js')
+const request = require("../index.js");
 
-request.head('https://httpbin.org', {},
-	request_head_ready)
+test("Test HEAD request", (_, done) => {
+    request.head("https://httpbin.org", {}, request_head_ready);
 
-/**
- * @type { ResponseCallback }
- *
- * @param { null | string } err
- * @param { Buffer | Object | string | null } data
- * @param { RequestProperties } [prop]
- */
-function request_head_ready(err, data, prop)
-{
-	describe('Test HEAD request', () => {
+    /**
+     * @type { ResponseCallback }
+     *
+     * @param { null | string } err
+     * @param { Buffer | Object | string | null } data
+     * @param { RequestProperties } [prop]
+     */
+    function request_head_ready(err, data, prop) {
+        test("No errors", () => {
+            ok(!err);
+        });
 
-		describe('head(url, headers, callback)', () => {
+        test("No data", () => {
+            ok(!data);
+        });
 
-			it('No errors', () => {
-				ok(!err)
-			})
+        test("Status code 200", () => {
+            strictEqual(prop.statusCode, 200);
+        });
 
-			it('No data', () => {
-				ok(!data)
-			})
+        test("Status message \"OK\"", () => {
+            strictEqual(prop.statusMessage, "OK");
+        });
 
-			it('Status code 200', () => {
-				strictEqual(prop.statusCode, 200)
-			})
-
-			it('Status message "OK"', () => {
-				strictEqual(prop.statusMessage, 'OK')
-			})
-		})
-	})
-}
+        setImmediate(done);
+    }
+});

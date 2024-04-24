@@ -1,50 +1,45 @@
-'use strict'
+"use strict";
 
-const {ok, strictEqual} = require('assert')
-const {describe, it}    = require('@popovmp/mocha-tiny')
+const {ok, strictEqual} = require("assert");
+const {test}            = require("node:test");
 
-const request = require('../index.js')
+const request = require("../index.js");
 
-const url    = 'https://httpbin.org/post?foo=bar'
-const buffer = Buffer.from('foo')
+test("Test POST binary data", (_, done) => {
+	const url    = "https://httpbin.org/post?foo=bar";
+	const buffer = Buffer.from("foo");
 
-request.post(url, buffer, {},
-	requestService_ready)
+	request.post(url, buffer, {}, requestService_ready);
 
-// noinspection DuplicatedCode
-/**
- * @type { ResponseCallback }
- *
- * @param { null | string } err
- * @param { Buffer | Object | string | null } data
- * @param { RequestProperties } [prop]
- */
-function requestService_ready(err, data, prop)
-{
-	describe('Test POST binary data', () => {
+    /**
+     * @type { ResponseCallback }
+     *
+     * @param { null | string } err
+     * @param { Buffer | Object | string | null } data
+     * @param { RequestProperties } [prop]
+     */
+    function requestService_ready(err, data, prop) {
+        test("No errors", () => {
+            ok(!err);
+        });
 
-		describe('post(url, buffer, headers, callback)', () => {
+        test("Status code 200", () => {
+            strictEqual(prop.statusCode, 200);
+        });
 
-			it('No errors', () => {
-				ok(!err)
-			})
+        test("Status message \"OK\"", () => {
+            strictEqual(prop.statusMessage, "OK");
+        });
 
-			it('Status code 200', () => {
-				strictEqual(prop.statusCode, 200)
-			})
+        test("Response received", () => {
+            ok(data);
+        });
 
-			it('Status message "OK"', () => {
-				strictEqual(prop.statusMessage, 'OK')
-			})
+        test("Correct data", () => {
+            // noinspection JSUnresolvedVariable
+            strictEqual(data.data, "foo");
+        });
 
-			it('Response received', () => {
-				ok(data)
-			})
-
-			it('Correct data', () => {
-				// noinspection JSUnresolvedVariable
-				strictEqual(data.data, 'foo')
-			})
-		})
-	})
-}
+        setImmediate(done);
+    }
+});

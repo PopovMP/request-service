@@ -1,28 +1,31 @@
-'use strict'
+"use strict";
 
-const {strictEqual}  = require('assert')
-const {describe, it} = require('@popovmp/mocha-tiny')
+const {strictEqual} = require("assert");
+const {test}        = require("node:test");
 
-const request = require('../index.js')
+const request = require("../index.js");
 
-request.get('https://httpbin.org/delay/3', {'Request-Timeout': 1},
-	request_get_ready)
+const url = "https://httpbin.org/delay/3";
 
-/**
- * @type { ResponseCallback }
- *
- * @param { null | string } err
- * @param { Buffer | Object | string | null } data
- * @param { RequestProperties } [prop]
- */
-function request_get_ready(err, data, prop)
-{
-	describe('Test timeout', () => {
+test("Test timeout", (_, done) => {
+    request.get(url, {"Request-Timeout": 1}, request_get_ready);
 
-		describe('req.destroy()', () => {
-			it('Socket hang up', () => {
-				strictEqual(err, 'socket hang up')
-			})
-		})
-	})
-}
+    /**
+     * @type { ResponseCallback }
+     *
+     * @param { null | string } err
+     * @param { Buffer | Object | string | null } data
+     * @param { RequestProperties } [_prop]
+     */
+    function request_get_ready(err, data, _prop) {
+        test("Socket hang up", () => {
+            strictEqual(err, "socket hang up");
+        });
+
+	    test("No data", () => {
+		    strictEqual(data, null);
+	    });
+
+        setImmediate(done);
+    }
+});

@@ -1,64 +1,69 @@
-'use strict'
+"use strict";
 
-const {strictEqual }  = require('assert')
-const {describe, it} = require('@popovmp/mocha-tiny')
+const {strictEqual}  = require("assert");
+const {describe, it} = require("node:test");
 
-const request = require('../index.js')
+const request = require("../index.js");
 
-setImmediate(testApi)
+describe("Request Service API", () => {
 
-function testApi()
-{
-	describe('Request Service API', () => {
+	describe("head(url, headers, callback)", () => {
+        it("is a function", () => {
+            strictEqual(typeof request.head, "function");
+        });
 
-		describe('head(url, headers, callback)', () => {
-			it('is a function', () => {
-				strictEqual(typeof request.head, 'function')
-			})
+        it("accepts 3 arguments", () => {
+            strictEqual(request.head.length, 3);
+        });
+    });
 
-			it('accepts 3 arguments', () => {
-				strictEqual(request.head.length, 3)
-			})
-		})
+	describe("get(url, headers, callback)", () => {
+        it("is a function", () => {
+            strictEqual(typeof request.get, "function");
+        });
 
-		describe('get(url, headers, callback)', () => {
-			it('is a function', () => {
-				strictEqual(typeof request.get, 'function')
-			})
+        it("accepts 3 arguments", () => {
+            strictEqual(request.get.length, 3);
+        });
+    });
 
-			it('accepts 3 arguments', () => {
-				strictEqual(request.get.length, 3)
-			})
-		})
+	describe("post(url, data, headers, callback)", () => {
+        it("is a function", () => {
+            strictEqual(typeof request.post, "function");
+        });
 
-		describe('post(url, data, headers, callback)', () => {
-			it('is a function', () => {
-				strictEqual(typeof request.post, 'function')
-			})
+        it("accepts 4 arguments", () => {
+            strictEqual(request.post.length, 4);
+        });
+    });
 
-			it('accepts 4 arguments', () => {
-				strictEqual(request.post.length, 4)
-			})
-		})
+	describe("put(url, data, headers, callback)", () => {
+		it("is a function", () => {
+			strictEqual(typeof request.put, "function");
+		});
 
-		describe('form(url, data, headers, callback)', () => {
-			it('is a function', () => {
-				strictEqual(typeof request.form, 'function')
-			})
+		it("accepts 4 arguments", () => {
+			strictEqual(request.put.length, 4);
+		});
+	});
 
-			it('accepts 4 arguments', () => {
-				strictEqual(request.form.length, 4)
-			})
-		})
+	describe("form(url, data, headers, callback)", () => {
+        it("is a function", () => {
+            strictEqual(typeof request.form, "function");
+        });
 
-		describe('json(url, data, headers, callback)', () => {
-			it('is a function', () => {
-				strictEqual(typeof request.json, 'function')
-			})
+        it("accepts 4 arguments", () => {
+            strictEqual(request.form.length, 4);
+        });
+    });
 
-			it('accepts 4 arguments', () => {
-				strictEqual(request.json.length, 4)
-			})
-		})
-	})
-}
+	describe("json(url, data, headers, callback)", () => {
+        it("is a function", () => {
+            strictEqual(typeof request.json, "function");
+        });
+
+        it("accepts 4 arguments", () => {
+            strictEqual(request.json.length, 4);
+        });
+    });
+});

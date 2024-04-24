@@ -1,17 +1,13 @@
-'use strict'
+"use strict";
 
-const {ok}           = require('assert')
-const {describe, it} = require('@popovmp/mocha-tiny')
+const {ok}   = require("assert");
+const {test} = require("node:test");
 
-const request = require('../index.js')
-
-request.get('https://example.com', undefined, (err, data) => {
-    describe('Fallback', () => {
-        describe('get(url, undefined, callback)', () => {
-            it('headers: undefined', () => {
-                ok(!err)
-                ok(data)
-            })
-        })
-    })
-})
+const request = require("../index.js");
+test("Fallback headers", (_ ,done) => {
+    request.get("https://example.com", undefined, (err, data) => {
+        ok(!err);
+        ok(data);
+        setImmediate(done);
+    });
+});

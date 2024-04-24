@@ -1,56 +1,47 @@
-'use strict'
+"use strict";
 
-const {ok, strictEqual} = require('assert')
-const {describe, it   } = require('@popovmp/mocha-tiny')
+const {ok, strictEqual} = require("assert");
+const {test}            = require("node:test");
 
-const request = require('../index.js')
+const request = require("../index.js");
+const url     = "https://datafeed.dukascopy.com/datafeed/EURUSD/2020/07/24/07h_ticks.bi5";
 
-const url = 'https://datafeed.dukascopy.com/datafeed/EURUSD/2020/07/24/07h_ticks.bi5'
+test("Test GET binary data", (_, done) => {
+    request.get(url, {"Request-Timeout": 3}, request_get_ready);
 
-request.get(url, {'Request-Timeout': 3},
-	request_get_ready)
+    /**
+     * @type { ResponseCallback }
+     *
+     * @param { null | string } err
+     * @param { Buffer | Object | string | null } data
+     * @param { RequestProperties } [prop]
+     */
+    function request_get_ready(err, data, prop) {
+        test("No errors", () => {
+            ok(!err);
+        });
 
-/**
- * @type { ResponseCallback }
- *
- * @param { null | string } err
- * @param { Buffer | Object | string | null } data
- * @param { RequestProperties } [prop]
- */
-function request_get_ready(err, data, prop)
-{
-	describe('Test GET binary data', () => {
+        test("Response received", () => {
+            ok(data);
+        });
 
-		describe('get(url, headers, callback)', () => {
+        test("Status code 200", () => {
+            strictEqual(prop.statusCode, 200);
+        });
 
-			if (err === 'socket hang up') {
-				return
-			}
+        test("Status message \"OK\"", () => {
+            strictEqual(prop.statusMessage, "OK");
+        });
 
-			it('No errors', () => {
-				ok(!err)
-			})
+        test("Received data is Buffer", () => {
+            ok(Buffer.isBuffer(data));
+        });
 
-			it('Response received', () => {
-				ok(data)
-			})
+        test("Equal data length and Content-Length", () => {
+            const contentLength = parseInt(prop.headers["content-length"]);
+            strictEqual(data.length, contentLength);
+        });
 
-			it('Status code 200', () => {
-				strictEqual(prop.statusCode, 200)
-			})
-
-			it('Status message "OK"', () => {
-				strictEqual(prop.statusMessage, 'OK')
-			})
-
-			it('Received data is Buffer', () => {
-				ok(Buffer.isBuffer(data))
-			})
-
-			it('Equal data length and Content-Length', () => {
-				const contentLength = parseInt(prop.headers['content-length'])
-				strictEqual(data.length, contentLength)
-			})
-		})
-	})
-}
+        setImmediate(done);
+    }
+});

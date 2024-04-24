@@ -1,36 +1,34 @@
-'use strict'
+"use strict";
 
-const {strictEqual}  = require('assert')
-const {describe, it} = require('@popovmp/mocha-tiny')
+const {strictEqual}  = require("assert");
+const {test} = require("node:test");
 
-const request = require('../index.js')
+const request = require("../index.js");
+const url     = "https://datafeed.dukascopy.com/datafeed/USATECHIDXUSD/2021/11/03/22h_ticks.bi5";
 
-describe('Test GET 0 bytes', () => {
-	request.get('https://datafeed.dukascopy.com/datafeed/USATECHIDXUSD/2021/11/03/22h_ticks.bi5', {'Request-Timeout': 3},
-		request_get_ready)
+test("Test GET 0 bytes", (_, done) => {
+    request.get(url, {"Request-Timeout": 3}, request_get_ready);
 
-	/**
-	 * @type { ResponseCallback }
-	 *
-	 * @param { null | string } err
-	 * @param { Buffer | Object | string | null } data
-	 * @param { RequestProperties } [prop]
-	 */
-	function request_get_ready(err, data, prop)
-	{
+    /**
+     * @type { ResponseCallback }
+     *
+     * @param { null | string } err
+     * @param { Buffer | Object | string | null } data
+     * @param { RequestProperties } [prop]
+     */
+    function request_get_ready(err, data, prop) {
+        test("No errors", () => {
+            strictEqual(err, null);
+        });
 
-		describe('get(url, headers, callback)', () => {
-			if (err === 'socket hang up') {
-				return
-			}
+        test("Status code 200", () => {
+            strictEqual(prop.statusCode, 200);
+        });
 
-			it('Status code 200', () => {
-				strictEqual(prop.statusCode, 200)
-			})
+        test("Content-length 0", () => {
+            strictEqual(prop.headers["content-length"], "0");
+        });
 
-			it('Content-length 0', () => {
-				strictEqual(prop.headers['content-length'], '0')
-			})
-		})
-	}
-})
+	    setImmediate(done);
+    }
+});
