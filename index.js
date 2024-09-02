@@ -13,7 +13,7 @@ const qs    = require("qs");
  */
 
 /**
- * @typedef { object } RequestProperties
+ * @typedef { Object } RequestProperties
  *
  * @property { boolean | undefined } complete
  * @property { Object              } headers
@@ -28,22 +28,30 @@ const qs    = require("qs");
  */
 
 /**
- * @typedef { object } RequestOptions
+ * @typedef { Record<string, string|number> } RequestHeaders
+ */
+
+/**
+ * @typedef { Object } RequestOptions
  *
- * @property { string              } hostname
- * @property { string              } path
- * @property { number              } port
- * @property { string              } protocol
- * @property { {[name: string]: string} } headers
- * @property { string              } method
+ * @property { string         } hostname
+ * @property { string         } path
+ * @property { number         } port
+ * @property { string         } protocol
+ * @property { RequestHeaders } headers
+ * @property { string         } method
+ */
+
+/**
+ * @typedef { Record<string, string|number|any> } FormData
  */
 
 /**
  * Sends a HEAD request.
  *
- * @param { string                  } url
- * @param { OutgoingHttpHeaders | * } headers
- * @param { ResponseCallback        } callback
+ * @param { string           } url
+ * @param { RequestHeaders   } headers
+ * @param { ResponseCallback } callback
  *
  * @return { void }
  */
@@ -56,9 +64,9 @@ function head(url, headers, callback) {
 /**
  * Sends a GET request.
  *
- * @param { string                  } url
- * @param { OutgoingHttpHeaders | * } headers
- * @param { ResponseCallback        } callback
+ * @param { string           } url
+ * @param { RequestHeaders   } headers
+ * @param { ResponseCallback } callback
  *
  * @return { void }
  */
@@ -71,10 +79,10 @@ function get(url, headers, callback) {
 /**
  * Sends a POST request.
  *
- * @param { string                  } url
- * @param { any                     } data
- * @param { OutgoingHttpHeaders | * } headers
- * @param { ResponseCallback        } callback
+ * @param { string           } url
+ * @param { any              } data
+ * @param { RequestHeaders   } headers
+ * @param { ResponseCallback } callback
  *
  * @return { void }
  */
@@ -85,10 +93,10 @@ function post(url, data, headers, callback) {
 /**
  * Sends a PUT request.
  *
- * @param { string                  } url
- * @param { any                     } data
- * @param { OutgoingHttpHeaders | * } headers
- * @param { ResponseCallback        } callback
+ * @param { string           } url
+ * @param { any              } data
+ * @param { RequestHeaders   } headers
+ * @param { ResponseCallback } callback
  *
  * @return { void }
  */
@@ -99,11 +107,11 @@ function put(url, data, headers, callback) {
 /**
  * Sends a POST or PUT request.
  *
- * @param { string                  } method
- * @param { string                  } url
- * @param { any                     } data
- * @param { OutgoingHttpHeaders | * } headers
- * @param { ResponseCallback        } callback
+ * @param { string           } method
+ * @param { string           } url
+ * @param { any              } data
+ * @param { RequestHeaders   } headers
+ * @param { ResponseCallback } callback
  *
  * @return { void }
  */
@@ -136,10 +144,10 @@ function postPut(method, url, data, headers, callback) {
 /**
  * Sends a POST request with "Content-Type: application/x-www-form-urlencoded".
  *
- * @param { string                  } url
- * @param { object                  } data - object, string, numbers or array
- * @param { OutgoingHttpHeaders | * } headers
- * @param { ResponseCallback        } callback
+ * @param { string           } url
+ * @param { FormData         } data
+ * @param { RequestHeaders   } headers
+ * @param { ResponseCallback } callback
  *
  * @return { void }
  */
@@ -153,10 +161,10 @@ function form(url, data, headers, callback) {
 /**
  * Sends a POST request with "Content-Type: application/json".
  *
- * @param { string                  } url
- * @param { object                  } data
- * @param { OutgoingHttpHeaders | * } headers
- * @param { ResponseCallback        } callback
+ * @param { string           } url
+ * @param { any              } data
+ * @param { RequestHeaders   } headers
+ * @param { ResponseCallback } callback
  *
  * @return { void }
  */
@@ -170,9 +178,9 @@ function json(url, data, headers, callback) {
 /**
  * Parses a URL string
  *
- * @param { string } url
- * @param { OutgoingHttpHeaders | * } headers
- * @param { string } method
+ * @param { string         } url
+ * @param { RequestHeaders } headers
+ * @param { string         } method
  *
  * @return { RequestOptions }
  */
@@ -201,11 +209,13 @@ function makeReqOptions(url, headers, method) {
  * @return { void }
  */
 function sendPost(options, data, contentType, callback) {
-    if (Buffer.isBuffer(data) || typeof data === "string")
+    if (Buffer.isBuffer(data) || typeof data === "string") {
         options.headers["Content-Length"] = Buffer.byteLength(data).toString();
+    }
 
-    if (contentType && !options.headers["Content-Type"])
+    if (contentType && !options.headers["Content-Type"]) {
         options.headers["Content-Type"] = contentType;
+    }
 
     sendRequest(options, data, callback);
 }
@@ -225,15 +235,21 @@ function sendRequest(options, postData, callback) {
     const req         = transporter.request(options, reqCallback);
     let   isReady     = false;
 
-    if (options.headers && typeof options.headers["Request-Timeout"] === "number")
+    if (options.headers && typeof options.headers["Request-Timeout"] === "number") {
         req.setTimeout(options.headers["Request-Timeout"] * 1000);
+    }
 
-    req.on("error", (err) => onReady(err.message, null, req));
+    req.on("error", (err) => {
+        onReady(err.message, null, req);
+    });
 
-    req.on("timeout", () => void req.destroy());
+    req.on("timeout", () => {
+        req.destroy();
+    });
 
-    if (postData)
+    if (postData) {
         req.write(postData);
+    }
 
     req.end();
 
@@ -244,9 +260,13 @@ function sendRequest(options, postData, callback) {
         /** @type { Buffer[] } */
         const chunks = [];
 
-        res.on("data", (chunk) => void chunks.push(chunk));
+        res.on("data", (chunk) => {
+            chunks.push(chunk);
+        });
 
-        res.on("error", (err) => onReady(err.message, null, res));
+        res.on("error", (err) => {
+            onReady(err.message, null, res);
+        });
 
         res.on("end", () => {
             /** @type { Buffer | Object | string | null } */
@@ -286,17 +306,21 @@ function sendRequest(options, postData, callback) {
  * @return { Buffer | Object | string }
  */
 function parseBody(buffer, contentType = "") {
-    if (contentType.includes("octet-stream"))
+    if (contentType.startsWith("application/octet-stream")) {
         return buffer;
+    }
 
-    if (contentType.includes("application/zip"))
+    if (contentType.startsWith("application/zip")) {
         return buffer;
+    }
 
-    if (contentType.includes("json"))
+    if (contentType.startsWith("application/json")) {
         return JSON.parse(buffer.toString());
+    }
 
-    if (contentType.includes("urlencoded"))
+    if (contentType.startsWith("application/x-www-form-urlencoded")) {
         return qs.parse(buffer.toString());
+    }
 
     return buffer.toString();
 }
